@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: blog-jdbc
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blog-jdbc
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
