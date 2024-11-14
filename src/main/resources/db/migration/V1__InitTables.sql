@@ -1,26 +1,35 @@
-CREATE TABLE Author(id SERIAL  PRIMARY KEY,
-                    first_name varchar(100) NOT NULL,
-                    last_name varchar(100) NOT NULL,
-                    email varchar(255) NOT NULL,
-                    username varchar(100) NOT NULL
+CREATE TABLE Author (
+  id SERIAL PRIMARY KEY,
+
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  username VARCHAR(100) NOT NULL,
+  VERSION INT
 );
 
-create table Post (
-    id SERIAL  PRIMARY KEY ,
-    version int,
-    title varchar(255) not null,
-    content text not null,
-    published_on timestamp not null,
-    updated_on timestamp,
-    author int,
-    foreign key (author) references Author(id)
+CREATE TABLE Post (
+  id SERIAL PRIMARY KEY,
+
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  published_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP,
+  author INT,
+  VERSION INT,
+
+  FOREIGN key (author) REFERENCES Author (id)
 );
 
-create table Comment(
-    post int not null,
-    name varchar(100) not null,
-    content text not null,
-    published_on timestamp not null,
-    updated_on timestamp,
-    foreign key (post) references Post(id)
+CREATE TABLE Comment (
+  id SERIAL PRIMARY KEY,
+
+  post INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  content TEXT NOT NULL,
+  published_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP,
+  VERSION INT,
+
+  FOREIGN key (post) REFERENCES Post (id)
 );
