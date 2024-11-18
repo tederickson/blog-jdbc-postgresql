@@ -1,13 +1,17 @@
 package dev.erickson.blog_jdbc.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 
+@AllArgsConstructor
 @Data
+@Builder
 public final class Author {
     @Id
-    Integer id;
+    Long id;
 
     String firstName;
     String lastName;
