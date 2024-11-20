@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class AuthorRepository {
+public class AuthorRepository implements DAO<Author> {
     private final JdbcTemplate jdbcTemplate;
 
     public Integer count() {
