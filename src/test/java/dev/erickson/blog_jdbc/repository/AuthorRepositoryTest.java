@@ -78,16 +78,43 @@ class AuthorRepositoryTest {
 
     @Test
     void deleteById() {
+        assertEquals(1, authorRepository.save(author));
+
+        Author dbAuthor = authorRepository.findByEmail(email).orElseThrow();
+
+        Integer count = authorRepository.deleteById(dbAuthor.getId());
+        assertNotNull(count);
+        assertEquals(1, count);
+    }
+
+    @Test
+    void deleteById_notFound() {
         Integer count = authorRepository.deleteById(-1L);
         assertNotNull(count);
         assertEquals(0, count);
     }
 
     @Test
-    void findAll() {
+    void findAll_noRows() {
         List<Author> authors = authorRepository.findAll();
         assertNotNull(authors);
         assertEquals(0, authors.size());
+    }
+
+    @Test
+    void findAll() {
+        authorRepository.save(author);
+
+        List<Author> authors = authorRepository.findAll();
+        assertNotNull(authors);
+        assertEquals(1, authors.size());
+
+        Author dbAuthor = authors.get(0);
+        assertEquals(dbAuthor.getUsername(), author.getUsername());
+        assertEquals(dbAuthor.getFirstName(), author.getFirstName());
+        assertEquals(dbAuthor.getLastName(), author.getLastName());
+        assertEquals(dbAuthor.getEmail(), author.getEmail());
+        assertEquals(0, dbAuthor.getVersion());
     }
 
     @Test
@@ -98,11 +125,11 @@ class AuthorRepositoryTest {
         Author dbAuthor = authorRepository.findByEmail(email).orElseThrow();
         Author lookup = authorRepository.findById(dbAuthor.getId()).orElseThrow();
 
-        assertEquals(dbAuthor,lookup);
+        assertEquals(dbAuthor, lookup);
     }
 
     @Test
     void findById_notFound() {
-         assertTrue( authorRepository.findById(123L).isEmpty());
+        assertTrue(authorRepository.findById(123L).isEmpty());
     }
 }
