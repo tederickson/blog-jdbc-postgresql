@@ -3,7 +3,6 @@ package dev.erickson.blog_jdbc.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.annotation.Version;
 
 import java.time.LocalDateTime;
 
@@ -14,9 +13,6 @@ public final class Comment {
 
     @Transient
     Post post;
-
-    @Version
-    Integer version;
 
     private String name;
     private String content;

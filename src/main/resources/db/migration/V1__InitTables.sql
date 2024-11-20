@@ -4,8 +4,7 @@ CREATE TABLE Author (
   first_name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  username VARCHAR(100) NOT NULL,
-  VERSION INT
+  username VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Post (
@@ -16,7 +15,6 @@ CREATE TABLE Post (
   published_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP,
   author INT,
-  VERSION INT,
 
   FOREIGN key (author) REFERENCES Author (id)
 );
@@ -29,7 +27,6 @@ CREATE TABLE Comment (
   content TEXT NOT NULL,
   published_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP,
-  VERSION INT,
 
   FOREIGN key (post) REFERENCES Post (id)
 );

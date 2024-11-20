@@ -14,8 +14,7 @@ public class AuthorMapper implements RowMapper<Author> {
                 resultSet.getString("first_name"),
                 resultSet.getString("last_name"),
                 resultSet.getString("email"),
-                resultSet.getString("username"),
-                resultSet.getInt("version")
+                resultSet.getString("username")
         );
     }
 }

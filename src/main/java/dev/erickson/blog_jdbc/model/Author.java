@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
 
 @AllArgsConstructor
 @Data
@@ -17,7 +16,4 @@ public final class Author {
     String lastName;
     String email;
     String username;
-
-    @Version
-    Integer version;
 }

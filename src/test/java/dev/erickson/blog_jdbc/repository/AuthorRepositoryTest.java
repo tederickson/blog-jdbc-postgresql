@@ -54,7 +54,6 @@ class AuthorRepositoryTest {
         assertEquals(author.getFirstName(), dbAuthor.getFirstName());
         assertEquals(author.getLastName(), dbAuthor.getLastName());
         assertEquals(author.getEmail(), dbAuthor.getEmail());
-        assertEquals(0, dbAuthor.getVersion());
     }
 
     @Test
@@ -69,11 +68,10 @@ class AuthorRepositoryTest {
         assertEquals(1, authorRepository.update(dbAuthor));
 
         dbAuthor = authorRepository.findByEmail(email).orElseThrow();
-        assertEquals(dbAuthor.getUsername(), "yepUpdated");
-        assertEquals(dbAuthor.getFirstName(), "modified");
+        assertEquals("yepUpdated", dbAuthor.getUsername());
+        assertEquals("modified", dbAuthor.getFirstName());
         assertEquals(author.getLastName(), dbAuthor.getLastName());
         assertEquals(author.getEmail(), dbAuthor.getEmail());
-        assertEquals(0, dbAuthor.getVersion());
     }
 
     @Test
@@ -114,7 +112,6 @@ class AuthorRepositoryTest {
         assertEquals(dbAuthor.getFirstName(), author.getFirstName());
         assertEquals(dbAuthor.getLastName(), author.getLastName());
         assertEquals(dbAuthor.getEmail(), author.getEmail());
-        assertEquals(0, dbAuthor.getVersion());
     }
 
     @Test
