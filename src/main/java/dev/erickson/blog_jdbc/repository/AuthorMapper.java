@@ -1,8 +1,8 @@
 package dev.erickson.blog_jdbc.repository;
 
 import dev.erickson.blog_jdbc.model.Author;
-
 import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

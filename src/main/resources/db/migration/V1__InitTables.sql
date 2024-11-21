@@ -7,6 +7,8 @@ CREATE TABLE Author (
   username VARCHAR(100) NOT NULL
 );
 
+CREATE UNIQUE INDEX ON Author (email);
+
 CREATE TABLE Post (
   id SERIAL PRIMARY KEY,
 

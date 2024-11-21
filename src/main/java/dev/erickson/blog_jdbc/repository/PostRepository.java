@@ -23,8 +23,8 @@ public class PostRepository implements DAO<Post> {
     public int save(Post post) {
         Assert.notNull(post.getAuthor(), "missing Author");
         return jdbcTemplate.update(
-                "insert into post (title, content, published_on, updated_on, author) values(?,?,?,?,?)",
-                post.getTitle(), post.getContent(), post.getPublishedOn(), post.getUpdatedOn(),
+                "insert into post (title, content, published_on, author) values(?,?,?,?)",
+                post.getTitle(), post.getContent(), post.getPublishedOn(),
                 post.getAuthor().getId());
     }
 
