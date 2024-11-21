@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class AuthorRepositoryTest {
     private final static String email = "ted.erickson@invalid.org";
+    private final static int AUTHOR_COUNT = 6;
 
     @Autowired
     AuthorRepository authorRepository;
@@ -27,12 +28,12 @@ class AuthorRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("delete from author");
+        jdbcTemplate.update("delete from author where email = ?", email);
 
         author = Author.builder()
-                .username("te0123")
-                .firstName("Ted")
-                .lastName("erickson")
+                .username("test_author")
+                .firstName("Test")
+                .lastName("Lastname")
                 .email(email)
                 .build();
     }
@@ -41,7 +42,7 @@ class AuthorRepositoryTest {
     void count() {
         Integer count = authorRepository.count();
         assertNotNull(count);
-        assertEquals(0, count);
+        assertEquals(AUTHOR_COUNT, count);
     }
 
     @Test
@@ -83,6 +84,8 @@ class AuthorRepositoryTest {
         Integer count = authorRepository.deleteById(dbAuthor.getId());
         assertNotNull(count);
         assertEquals(1, count);
+
+        assertEquals(AUTHOR_COUNT, authorRepository.count());
     }
 
     @Test
@@ -92,32 +95,23 @@ class AuthorRepositoryTest {
         assertEquals(0, count);
     }
 
-    @Test
-    void findAll_noRows() {
-        List<Author> authors = authorRepository.findAll();
-        assertNotNull(authors);
-        assertEquals(0, authors.size());
-    }
 
     @Test
     void findAll() {
-        authorRepository.save(author);
-
         List<Author> authors = authorRepository.findAll();
         assertNotNull(authors);
-        assertEquals(1, authors.size());
+        assertEquals(AUTHOR_COUNT, authors.size());
 
         Author dbAuthor = authors.get(0);
-        assertEquals(dbAuthor.getUsername(), author.getUsername());
-        assertEquals(dbAuthor.getFirstName(), author.getFirstName());
-        assertEquals(dbAuthor.getLastName(), author.getLastName());
-        assertEquals(dbAuthor.getEmail(), author.getEmail());
+        assertEquals("agatha", dbAuthor.getUsername());
+        assertEquals("Agatha", dbAuthor.getFirstName());
+        assertEquals("Christie", dbAuthor.getLastName());
+        assertEquals("agatha@test.net", dbAuthor.getEmail());
     }
 
     @Test
     void findById() {
-        Integer count = authorRepository.save(author);
-        assertEquals(1, count);
+        authorRepository.save(author);
 
         Author dbAuthor = authorRepository.findByEmail(email).orElseThrow();
         Author lookup = authorRepository.findById(dbAuthor.getId()).orElseThrow();
