@@ -1,6 +1,7 @@
 package dev.erickson.blog_jdbc.repository;
 
 import dev.erickson.blog_jdbc.model.Author;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,17 @@ class AuthorRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("delete from author where email = ?", email);
-
         author = Author.builder()
                 .username("test_author")
                 .firstName("Test")
                 .lastName("Lastname")
                 .email(email)
                 .build();
+    }
+
+    @AfterEach
+    void tearDown() {
+        jdbcTemplate.update("delete from author where email = ?", email);
     }
 
     @Test

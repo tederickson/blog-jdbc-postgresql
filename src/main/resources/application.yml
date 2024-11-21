@@ -8,4 +8,9 @@ spring:
     password:
     driver-class-name: org.postgresql.Driver
 
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core: TRACE
