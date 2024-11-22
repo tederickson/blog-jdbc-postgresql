@@ -22,17 +22,17 @@ public class CommentRepository implements DAO<Comment> {
     }
 
     public int save(Comment comment) {
-        Assert.notNull(comment.getPost(), "missing Post");
+        Assert.notNull(comment.getPostId(), "missing Post");
         return jdbcTemplate.update(
                 "insert into comment (post, name, content, published_on) values(?,?,?,?)",
-                comment.getPost().getId(), comment.getName(), comment.getContent(), comment.getPublishedOn());
+                comment.getPostId() , comment.getName(), comment.getContent(), comment.getPublishedOn());
     }
 
     public int update(Comment comment) {
-        Assert.notNull(comment.getPost(), "missing Post");
+        Assert.notNull(comment.getPostId(), "missing Post");
         return jdbcTemplate.update(
                 "update comment set post=?, name=?, content=?, published_on=?, updated_on=? where id = ?",
-                comment.getPost().getId(), comment.getName(), comment.getContent(), comment.getPublishedOn(),
+                comment.getPostId() , comment.getName(), comment.getContent(), comment.getPublishedOn(),
                 comment.getUpdatedOn(),
                 comment.getId());
     }

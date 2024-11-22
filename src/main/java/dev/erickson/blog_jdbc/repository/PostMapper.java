@@ -3,6 +3,7 @@ package dev.erickson.blog_jdbc.repository;
 import dev.erickson.blog_jdbc.model.Author;
 import dev.erickson.blog_jdbc.model.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 public class PostMapper implements RowMapper<Post> {
     private final AuthorRepository authorRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public Post mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -28,6 +30,7 @@ public class PostMapper implements RowMapper<Post> {
         Author author = authorRepository.findById(authorId).orElseThrow();
 
         post.setAuthor(author);
+        post.setComments(commentRepository.findByPost(post));
 
         return post;
     }

@@ -90,7 +90,7 @@ class CommentRepositoryTest {
         var updated = comments.get(0);
 
         assertNotNull(updated.getUpdatedOn());
-        assertEquals(dbComment.getPost(), updated.getPost());
+        assertEquals(dbComment.getPostId(), updated.getPostId());
         assertEquals(dbComment.getName(), updated.getName());
         assertEquals(dbComment.getId(), updated.getId());
         assertEquals(dbComment.getContent(), updated.getContent());
@@ -111,7 +111,7 @@ class CommentRepositoryTest {
 
     private void saveComment(String name, String content) {
         Comment comment = Comment.builder()
-                .post(post)
+                .postId(post.getId())
                 .name(name)
                 .content(content)
                 .publishedOn(LocalDateTime.now())
@@ -121,6 +121,21 @@ class CommentRepositoryTest {
 
     @Test
     void findAll() {
+        var name = "Friendly comment";
+        var content = "Praise, kudos";
+        var numComments = 5;
+
+        for (int i = 0; i < numComments; i++) {saveComment(name, content);}
+
+        var comments = commentRepository.findAll();
+        assertEquals(numComments, comments.size());
+
+        comments.forEach(comment -> {
+            assertEquals(name, comment.getName());
+            assertEquals(content, comment.getContent());
+            assertNotNull(comment.getPublishedOn());
+            assertNull(comment.getUpdatedOn());
+        });
     }
 
     @Test

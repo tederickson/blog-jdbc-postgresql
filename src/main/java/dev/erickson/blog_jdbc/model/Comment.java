@@ -12,7 +12,7 @@ public final class Comment {
     @Id
     private Long id;
 
-    private Post post;
+    private Long postId;
 
     private String name;
     private String content;
