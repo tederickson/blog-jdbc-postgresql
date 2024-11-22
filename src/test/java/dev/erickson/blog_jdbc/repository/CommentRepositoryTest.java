@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class CommentRepositoryTest {
@@ -28,13 +29,11 @@ class CommentRepositoryTest {
     @Autowired
     CommentRepository commentRepository;
 
-    private Author author;
-
     private Post post;
 
     @BeforeEach
     void setUp() {
-        author = authorRepository.findById(AUTHOR_ID).orElseThrow();
+        Author author = authorRepository.findById(AUTHOR_ID).orElseThrow();
 
         postRepository.save(Post.builder()
                                     .author(author)
@@ -140,9 +139,18 @@ class CommentRepositoryTest {
 
     @Test
     void findById() {
+        assertEquals(0, commentRepository.count());
+
+        saveComment("Bob", "Bob critiques post");
+        var comments = commentRepository.findAll();
+        assertEquals(1, comments.size());
+
+        var comment = commentRepository.findById(comments.get(0).getId()).orElseThrow();
+        assertEquals(comments.get(0), comment);
     }
 
     @Test
     void findByPost() {
+        assertTrue(commentRepository.findByPost(post).isEmpty());
     }
 }
