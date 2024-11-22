@@ -13,7 +13,7 @@ public class CommentMapper implements RowMapper<Comment> {
     public Comment mapRow(ResultSet resultSet, int i) throws SQLException {
         return Comment.builder()
                 .id(resultSet.getLong("id"))
-                .postId(resultSet.getLong("post"))
+                .postId(resultSet.getLong("post_id"))
                 .name(resultSet.getString("name"))
                 .content(resultSet.getString("content"))
                 .publishedOn(MapperUtil.getLocalDateTime(resultSet.getTimestamp("published_on")))

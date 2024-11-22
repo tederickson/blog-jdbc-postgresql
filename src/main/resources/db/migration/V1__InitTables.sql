@@ -20,15 +20,16 @@ CREATE TABLE Post (
 
   FOREIGN key (author) REFERENCES Author (id)
 );
+CREATE UNIQUE INDEX ON Post (title);
 
 CREATE TABLE Comment (
   id SERIAL PRIMARY KEY,
 
-  post INT NOT NULL,
+  post_id INT NOT NULL,
   name VARCHAR(100) NOT NULL,
   content TEXT NOT NULL,
   published_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP,
 
-  FOREIGN key (post) REFERENCES Post (id)
+  FOREIGN key (post_id) REFERENCES Post (id)
 );

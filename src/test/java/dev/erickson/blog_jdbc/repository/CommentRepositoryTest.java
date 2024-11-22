@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class CommentRepositoryTest {
     public static final Long AUTHOR_ID = 5L;
-    public static final String TITLE = "My Test Post";
+    public static final String TITLE = "My Test Post For Comments";
 
     @Autowired
     PostRepository postRepository;

@@ -24,14 +24,14 @@ public class CommentRepository implements DAO<Comment> {
     public int save(Comment comment) {
         Assert.notNull(comment.getPostId(), "missing Post");
         return jdbcTemplate.update(
-                "insert into comment (post, name, content, published_on) values(?,?,?,?)",
+                "insert into comment (post_id, name, content, published_on) values(?,?,?,?)",
                 comment.getPostId() , comment.getName(), comment.getContent(), comment.getPublishedOn());
     }
 
     public int update(Comment comment) {
         Assert.notNull(comment.getPostId(), "missing Post");
         return jdbcTemplate.update(
-                "update comment set post=?, name=?, content=?, published_on=?, updated_on=? where id = ?",
+                "update comment set post_id=?, name=?, content=?, published_on=?, updated_on=? where id = ?",
                 comment.getPostId() , comment.getName(), comment.getContent(), comment.getPublishedOn(),
                 comment.getUpdatedOn(),
                 comment.getId());
@@ -54,6 +54,6 @@ public class CommentRepository implements DAO<Comment> {
     }
 
     public List<Comment> findByPost(Post post) {
-        return jdbcTemplate.query("select * from comment where post = ?", commentMapper, post.getId());
+        return jdbcTemplate.query("select * from comment where post_id = ?", commentMapper, post.getId());
     }
 }
