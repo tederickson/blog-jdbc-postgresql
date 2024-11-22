@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
@@ -61,6 +62,54 @@ class CommentRepositoryTest {
 
         var name = "Friendly comment";
         var content = "Praise, kudos";
+        saveComment(name, content);
+        assertEquals(1, commentRepository.count());
+
+        Comment dbComment = commentRepository.findByPost(post).get(0);
+        assertEquals(name, dbComment.getName());
+        assertEquals(content, dbComment.getContent());
+        assertNotNull(dbComment.getPublishedOn());
+        assertNull(dbComment.getUpdatedOn());
+    }
+
+    @Test
+    void update() {
+        var name = "Friendly comment";
+        var content = "Praise, kudos";
+        saveComment(name, content);
+
+        Comment dbComment = commentRepository.findByPost(post).get(0);
+        dbComment.setName("Troll comment");
+        dbComment.setContent("rude, lies");
+        dbComment.setUpdatedOn(LocalDateTime.now());
+
+        assertEquals(1, commentRepository.update(dbComment));
+        var comments = commentRepository.findByPost(post);
+
+        assertEquals(1, comments.size());
+        var updated = comments.get(0);
+
+        assertNotNull(updated.getUpdatedOn());
+        assertEquals(dbComment.getPost(), updated.getPost());
+        assertEquals(dbComment.getName(), updated.getName());
+        assertEquals(dbComment.getId(), updated.getId());
+        assertEquals(dbComment.getContent(), updated.getContent());
+        assertEquals(dbComment.getPublishedOn(), updated.getPublishedOn());
+    }
+
+    @Test
+    void deleteById() {
+        var name = "Friendly comment";
+        var content = "Praise, kudos";
+        saveComment(name, content);
+
+        Comment dbComment = commentRepository.findByPost(post).get(0);
+
+        assertEquals(1, commentRepository.deleteById(dbComment.getId()));
+        assertEquals(0, commentRepository.count());
+    }
+
+    private void saveComment(String name, String content) {
         Comment comment = Comment.builder()
                 .post(post)
                 .name(name)
@@ -68,21 +117,6 @@ class CommentRepositoryTest {
                 .publishedOn(LocalDateTime.now())
                 .build();
         assertEquals(1, commentRepository.save(comment));
-        assertEquals(1, commentRepository.count());
-
-        Comment dbComment = commentRepository.findByPost(post).get(0);
-        assertEquals(name, dbComment.getName());
-        assertEquals(content,dbComment.getContent());
-        assertEquals(comment.getPublishedOn(), dbComment.getPublishedOn());
-        assertNull(dbComment.getUpdatedOn());
-    }
-
-    @Test
-    void update() {
-    }
-
-    @Test
-    void deleteById() {
     }
 
     @Test
