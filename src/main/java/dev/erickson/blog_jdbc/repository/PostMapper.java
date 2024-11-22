@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +20,8 @@ public class PostMapper implements RowMapper<Post> {
                 .id(resultSet.getLong("id"))
                 .title(resultSet.getString("title"))
                 .content(resultSet.getString("content"))
-                .publishedOn(getLocalDateTime(resultSet.getTimestamp("published_on")))
-                .updatedOn(getLocalDateTime(resultSet.getTimestamp("updated_on")))
+                .publishedOn(MapperUtil.getLocalDateTime(resultSet.getTimestamp("published_on")))
+                .updatedOn(MapperUtil.getLocalDateTime(resultSet.getTimestamp("updated_on")))
                 .build();
 
         Long authorId = resultSet.getLong("author");
@@ -32,9 +30,5 @@ public class PostMapper implements RowMapper<Post> {
         post.setAuthor(author);
 
         return post;
-    }
-
-    LocalDateTime getLocalDateTime(Timestamp timestamp) {
-        return timestamp == null ? null : timestamp.toLocalDateTime();
     }
 }
