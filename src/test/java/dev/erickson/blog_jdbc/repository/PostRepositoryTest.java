@@ -46,6 +46,7 @@ class PostRepositoryTest {
                 .title(TITLE)
                 .content("Blah de blah blah")
                 .publishedOn(LocalDateTime.now())
+                .comments(List.of())
                 .build();
     }
 
