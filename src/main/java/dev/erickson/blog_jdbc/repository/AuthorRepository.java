@@ -39,18 +39,18 @@ public class AuthorRepository implements DAO<AuthorEntity> {
     public List<AuthorEntity> findAll() {
         return jdbcTemplate.query(
                 "select * from author",
-                new AuthorMapper()
+                new AuthorEntityMapper()
         );
     }
 
     public Optional<AuthorEntity> findById(Long id) {
-        return jdbcTemplate.query("select * from author where id = ?", new AuthorMapper(), id)
+        return jdbcTemplate.query("select * from author where id = ?", new AuthorEntityMapper(), id)
                 .stream()
                 .findFirst();
     }
 
     public Optional<AuthorEntity> findByEmail(String email) {
-        return jdbcTemplate.query("select * from author where email = ?", new AuthorMapper(), email)
+        return jdbcTemplate.query("select * from author where email = ?", new AuthorEntityMapper(), email)
                 .stream()
                 .findFirst();
     }

@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostRepository implements DAO<PostEntity> {
     private final JdbcTemplate jdbcTemplate;
-    private final PostMapper postMapper;
+    private final PostEntityMapper postEntityMapper;
 
     public Integer count() {
         return jdbcTemplate
@@ -43,17 +43,17 @@ public class PostRepository implements DAO<PostEntity> {
     }
 
     public List<PostEntity> findAll() {
-        return jdbcTemplate.query("select * from post", postMapper);
+        return jdbcTemplate.query("select * from post", postEntityMapper);
     }
 
     public Optional<PostEntity> findById(Long id) {
-        return jdbcTemplate.query("select * from post where id = ?", postMapper, id)
+        return jdbcTemplate.query("select * from post where id = ?", postEntityMapper, id)
                 .stream()
                 .findFirst();
     }
 
     public List<PostEntity> findByTitle(String title) {
-        return jdbcTemplate.query("select * from post where title = ?", postMapper, title)
+        return jdbcTemplate.query("select * from post where title = ?", postEntityMapper, title)
                 .stream()
                 .toList();
     }

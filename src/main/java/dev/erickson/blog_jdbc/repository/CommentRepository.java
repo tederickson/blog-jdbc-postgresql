@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentRepository implements DAO<CommentEntity> {
     private final JdbcTemplate jdbcTemplate;
-    private final CommentMapper commentMapper;
+    private final CommentEntityMapper commentEntityMapper;
 
     public Integer count() {
         return jdbcTemplate
@@ -44,16 +44,16 @@ public class CommentRepository implements DAO<CommentEntity> {
     }
 
     public List<CommentEntity> findAll() {
-        return jdbcTemplate.query("select * from comment", commentMapper);
+        return jdbcTemplate.query("select * from comment", commentEntityMapper);
     }
 
     public Optional<CommentEntity> findById(Long id) {
-        return jdbcTemplate.query("select * from comment where id = ?", commentMapper, id)
+        return jdbcTemplate.query("select * from comment where id = ?", commentEntityMapper, id)
                 .stream()
                 .findFirst();
     }
 
     public List<CommentEntity> findByPost(PostEntity postEntity) {
-        return jdbcTemplate.query("select * from comment where post_id = ?", commentMapper, postEntity.getId());
+        return jdbcTemplate.query("select * from comment where post_id = ?", commentEntityMapper, postEntity.getId());
     }
 }

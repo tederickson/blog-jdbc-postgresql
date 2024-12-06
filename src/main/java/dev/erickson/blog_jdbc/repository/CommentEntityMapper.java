@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class CommentMapper implements RowMapper<CommentEntity> {
+public class CommentEntityMapper implements RowMapper<CommentEntity> {
     @Override
     public CommentEntity mapRow(ResultSet resultSet, int i) throws SQLException {
         return CommentEntity.builder()

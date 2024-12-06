@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 @Component
 @RequiredArgsConstructor
-public class PostMapper implements RowMapper<PostEntity> {
+public class PostEntityMapper implements RowMapper<PostEntity> {
     private final AuthorRepository authorRepository;
     private final CommentRepository commentRepository;
 
