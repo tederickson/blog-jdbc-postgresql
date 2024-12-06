@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Data
 @Builder
-public final class Author {
+public final class AuthorEntity {
     @Id
     Long id;
 

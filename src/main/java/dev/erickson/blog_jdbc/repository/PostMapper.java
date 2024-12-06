@@ -1,9 +1,8 @@
 package dev.erickson.blog_jdbc.repository;
 
-import dev.erickson.blog_jdbc.model.Author;
-import dev.erickson.blog_jdbc.model.Post;
+import dev.erickson.blog_jdbc.model.AuthorEntity;
+import dev.erickson.blog_jdbc.model.PostEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -12,13 +11,13 @@ import java.sql.SQLException;
 
 @Component
 @RequiredArgsConstructor
-public class PostMapper implements RowMapper<Post> {
+public class PostMapper implements RowMapper<PostEntity> {
     private final AuthorRepository authorRepository;
     private final CommentRepository commentRepository;
 
     @Override
-    public Post mapRow(ResultSet resultSet, int i) throws SQLException {
-        Post post = Post.builder()
+    public PostEntity mapRow(ResultSet resultSet, int i) throws SQLException {
+        PostEntity postEntity = PostEntity.builder()
                 .id(resultSet.getLong("id"))
                 .title(resultSet.getString("title"))
                 .content(resultSet.getString("content"))
@@ -27,11 +26,11 @@ public class PostMapper implements RowMapper<Post> {
                 .build();
 
         Long authorId = resultSet.getLong("author");
-        Author author = authorRepository.findById(authorId).orElseThrow();
+        AuthorEntity authorEntity = authorRepository.findById(authorId).orElseThrow();
 
-        post.setAuthor(author);
-        post.setComments(commentRepository.findByPost(post));
+        postEntity.setAuthorEntity(authorEntity);
+        postEntity.setCommentEntities(commentRepository.findByPost(postEntity));
 
-        return post;
+        return postEntity;
     }
 }

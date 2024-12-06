@@ -9,12 +9,12 @@ import java.util.List;
 
 @Data
 @Builder
-public class Post {
+public class PostEntity {
     @Id
     private Long id;
 
-    private Author author;
-    private List<Comment> comments;
+    private AuthorEntity authorEntity;
+    private List<CommentEntity> commentEntities;
 
     private String title;
     private String content;

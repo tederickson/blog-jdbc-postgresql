@@ -1,6 +1,6 @@
 package dev.erickson.blog_jdbc.repository;
 
-import dev.erickson.blog_jdbc.model.Author;
+import dev.erickson.blog_jdbc.model.AuthorEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class AuthorRepository implements DAO<Author> {
+public class AuthorRepository implements DAO<AuthorEntity> {
     private final JdbcTemplate jdbcTemplate;
 
     public Integer count() {
@@ -18,16 +18,16 @@ public class AuthorRepository implements DAO<Author> {
                 .queryForObject("select count(*) from author", Integer.class);
     }
 
-    public int save(Author author) {
+    public int save(AuthorEntity authorEntity) {
         return jdbcTemplate.update(
                 "insert into author (first_name, last_name, email, username) values(?,?,?,?)",
-                author.getFirstName(), author.getLastName(), author.getEmail(), author.getUsername());
+                authorEntity.getFirstName(), authorEntity.getLastName(), authorEntity.getEmail(), authorEntity.getUsername());
     }
 
-    public int update(Author author) {
+    public int update(AuthorEntity authorEntity) {
         return jdbcTemplate.update(
                 "update author set first_name=?, last_name=?, email=?, username=? where id = ?",
-                author.getFirstName(), author.getLastName(), author.getEmail(), author.getUsername(), author.getId());
+                authorEntity.getFirstName(), authorEntity.getLastName(), authorEntity.getEmail(), authorEntity.getUsername(), authorEntity.getId());
     }
 
     public int deleteById(Long id) {
@@ -36,20 +36,20 @@ public class AuthorRepository implements DAO<Author> {
                 id);
     }
 
-    public List<Author> findAll() {
+    public List<AuthorEntity> findAll() {
         return jdbcTemplate.query(
                 "select * from author",
                 new AuthorMapper()
         );
     }
 
-    public Optional<Author> findById(Long id) {
+    public Optional<AuthorEntity> findById(Long id) {
         return jdbcTemplate.query("select * from author where id = ?", new AuthorMapper(), id)
                 .stream()
                 .findFirst();
     }
 
-    public Optional<Author> findByEmail(String email) {
+    public Optional<AuthorEntity> findByEmail(String email) {
         return jdbcTemplate.query("select * from author where email = ?", new AuthorMapper(), email)
                 .stream()
                 .findFirst();

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-public final class Comment {
+public final class CommentEntity {
     @Id
     private Long id;
 

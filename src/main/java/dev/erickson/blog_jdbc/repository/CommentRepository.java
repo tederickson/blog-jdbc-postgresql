@@ -1,7 +1,7 @@
 package dev.erickson.blog_jdbc.repository;
 
-import dev.erickson.blog_jdbc.model.Comment;
-import dev.erickson.blog_jdbc.model.Post;
+import dev.erickson.blog_jdbc.model.CommentEntity;
+import dev.erickson.blog_jdbc.model.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentRepository implements DAO<Comment> {
+public class CommentRepository implements DAO<CommentEntity> {
     private final JdbcTemplate jdbcTemplate;
     private final CommentMapper commentMapper;
 
@@ -21,20 +21,20 @@ public class CommentRepository implements DAO<Comment> {
                 .queryForObject("select count(*) from comment", Integer.class);
     }
 
-    public int save(Comment comment) {
-        Assert.notNull(comment.getPostId(), "missing Post");
+    public int save(CommentEntity commentEntity) {
+        Assert.notNull(commentEntity.getPostId(), "missing Post");
         return jdbcTemplate.update(
                 "insert into comment (post_id, name, content, published_on) values(?,?,?,?)",
-                comment.getPostId() , comment.getName(), comment.getContent(), comment.getPublishedOn());
+                commentEntity.getPostId() , commentEntity.getName(), commentEntity.getContent(), commentEntity.getPublishedOn());
     }
 
-    public int update(Comment comment) {
-        Assert.notNull(comment.getPostId(), "missing Post");
+    public int update(CommentEntity commentEntity) {
+        Assert.notNull(commentEntity.getPostId(), "missing Post");
         return jdbcTemplate.update(
                 "update comment set post_id=?, name=?, content=?, published_on=?, updated_on=? where id = ?",
-                comment.getPostId() , comment.getName(), comment.getContent(), comment.getPublishedOn(),
-                comment.getUpdatedOn(),
-                comment.getId());
+                commentEntity.getPostId() , commentEntity.getName(), commentEntity.getContent(), commentEntity.getPublishedOn(),
+                commentEntity.getUpdatedOn(),
+                commentEntity.getId());
     }
 
     public int deleteById(Long id) {
@@ -43,17 +43,17 @@ public class CommentRepository implements DAO<Comment> {
                 id);
     }
 
-    public List<Comment> findAll() {
+    public List<CommentEntity> findAll() {
         return jdbcTemplate.query("select * from comment", commentMapper);
     }
 
-    public Optional<Comment> findById(Long id) {
+    public Optional<CommentEntity> findById(Long id) {
         return jdbcTemplate.query("select * from comment where id = ?", commentMapper, id)
                 .stream()
                 .findFirst();
     }
 
-    public List<Comment> findByPost(Post post) {
-        return jdbcTemplate.query("select * from comment where post_id = ?", commentMapper, post.getId());
+    public List<CommentEntity> findByPost(PostEntity postEntity) {
+        return jdbcTemplate.query("select * from comment where post_id = ?", commentMapper, postEntity.getId());
     }
 }

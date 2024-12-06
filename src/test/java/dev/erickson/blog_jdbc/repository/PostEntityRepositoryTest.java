@@ -1,7 +1,7 @@
 package dev.erickson.blog_jdbc.repository;
 
-import dev.erickson.blog_jdbc.model.Author;
-import dev.erickson.blog_jdbc.model.Post;
+import dev.erickson.blog_jdbc.model.AuthorEntity;
+import dev.erickson.blog_jdbc.model.PostEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-class PostRepositoryTest {
+class PostEntityRepositoryTest {
 
     public static final String TITLE = "My Test Post";
     private final static String email = "ted.post@invalid.org";
@@ -27,36 +27,36 @@ class PostRepositoryTest {
     @Autowired
     AuthorRepository authorRepository;
 
-    private Post post;
+    private PostEntity postEntity;
 
     @BeforeEach
     void setUp() {
-        final Author author = Author.builder()
+        final AuthorEntity authorEntity = AuthorEntity.builder()
                 .username("test_author")
                 .firstName("Test")
                 .lastName("Lastname")
                 .email(email)
                 .build();
-        authorRepository.save(author);
+        authorRepository.save(authorEntity);
 
-        final Author dbAuthor = authorRepository.findByEmail(email).orElseThrow();
+        final AuthorEntity dbAuthorEntity = authorRepository.findByEmail(email).orElseThrow();
 
-        post = Post.builder()
-                .author(dbAuthor)
+        postEntity = PostEntity.builder()
+                .authorEntity(dbAuthorEntity)
                 .title(TITLE)
                 .content("Blah de blah blah")
                 .publishedOn(LocalDateTime.now())
-                .comments(List.of())
+                .commentEntities(List.of())
                 .build();
     }
 
     @AfterEach
     void tearDown() {
-        List<Post> posts = postRepository.findByTitle(TITLE);
+        List<PostEntity> postEntities = postRepository.findByTitle(TITLE);
 
-        posts.forEach(post -> postRepository.deleteById(post.getId()));
+        postEntities.forEach(post -> postRepository.deleteById(post.getId()));
 
-        var id = authorRepository.findByEmail(email).map(Author::getId).orElseThrow();
+        var id = authorRepository.findByEmail(email).map(AuthorEntity::getId).orElseThrow();
         assertEquals(1, authorRepository.deleteById(id));
     }
 
@@ -67,18 +67,18 @@ class PostRepositoryTest {
 
     @Test
     void save() {
-        assertEquals(1, postRepository.save(post));
+        assertEquals(1, postRepository.save(postEntity));
     }
 
     @Test
     void update() {
-        assertEquals(1, postRepository.save(post));
+        assertEquals(1, postRepository.save(postEntity));
         final var dbPost = postRepository.findByTitle(TITLE).get(0);
 
         assertNull(dbPost.getUpdatedOn());
 
-        post.setId(dbPost.getId());
-        assertEquals(post, dbPost);
+        postEntity.setId(dbPost.getId());
+        assertEquals(postEntity, dbPost);
 
         String content = "Generations of art";
         dbPost.setContent(content);
@@ -86,7 +86,7 @@ class PostRepositoryTest {
 
         assertEquals(1, postRepository.update(dbPost));
 
-        var updatedPost = postRepository.findById(post.getId()).orElseThrow();
+        var updatedPost = postRepository.findById(postEntity.getId()).orElseThrow();
         assertEquals(content, updatedPost.getContent());
 
         assertNotNull(updatedPost.getUpdatedOn());
@@ -96,10 +96,10 @@ class PostRepositoryTest {
     void deleteById() {
         assertEquals(0, postRepository.deleteById(-1L));
 
-        postRepository.save(post);
+        postRepository.save(postEntity);
 
         final var id = postRepository.findByTitle(TITLE).stream()
-                .map(Post::getId)
+                .map(PostEntity::getId)
                 .findFirst()
                 .orElseThrow();
         assertEquals(1, postRepository.deleteById(id));

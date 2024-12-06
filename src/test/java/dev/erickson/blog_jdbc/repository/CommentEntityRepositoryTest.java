@@ -1,8 +1,8 @@
 package dev.erickson.blog_jdbc.repository;
 
-import dev.erickson.blog_jdbc.model.Author;
-import dev.erickson.blog_jdbc.model.Comment;
-import dev.erickson.blog_jdbc.model.Post;
+import dev.erickson.blog_jdbc.model.AuthorEntity;
+import dev.erickson.blog_jdbc.model.CommentEntity;
+import dev.erickson.blog_jdbc.model.PostEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-class CommentRepositoryTest {
+class CommentEntityRepositoryTest {
     public static final Long AUTHOR_ID = 5L;
     public static final String TITLE = "My Test Post For Comments";
 
@@ -29,25 +29,25 @@ class CommentRepositoryTest {
     @Autowired
     CommentRepository commentRepository;
 
-    private Post post;
+    private PostEntity postEntity;
 
     @BeforeEach
     void setUp() {
-        Author author = authorRepository.findById(AUTHOR_ID).orElseThrow();
+        AuthorEntity authorEntity = authorRepository.findById(AUTHOR_ID).orElseThrow();
 
-        postRepository.save(Post.builder()
-                                    .author(author)
+        postRepository.save(PostEntity.builder()
+                                    .authorEntity(authorEntity)
                                     .title(TITLE)
                                     .content("A Jules Version post")
                                     .publishedOn(LocalDateTime.now())
                                     .build());
-        post = postRepository.findByTitle(TITLE).get(0);
+        postEntity = postRepository.findByTitle(TITLE).get(0);
     }
 
     @AfterEach
     void tearDown() {
-        commentRepository.findByPost(post).forEach(row -> commentRepository.deleteById(row.getId()));
-        postRepository.deleteById(post.getId());
+        commentRepository.findByPost(postEntity).forEach(row -> commentRepository.deleteById(row.getId()));
+        postRepository.deleteById(postEntity.getId());
     }
 
     @Test
@@ -64,11 +64,11 @@ class CommentRepositoryTest {
         saveComment(name, content);
         assertEquals(1, commentRepository.count());
 
-        Comment dbComment = commentRepository.findByPost(post).get(0);
-        assertEquals(name, dbComment.getName());
-        assertEquals(content, dbComment.getContent());
-        assertNotNull(dbComment.getPublishedOn());
-        assertNull(dbComment.getUpdatedOn());
+        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
+        assertEquals(name, dbCommentEntity.getName());
+        assertEquals(content, dbCommentEntity.getContent());
+        assertNotNull(dbCommentEntity.getPublishedOn());
+        assertNull(dbCommentEntity.getUpdatedOn());
     }
 
     @Test
@@ -77,23 +77,23 @@ class CommentRepositoryTest {
         var content = "Praise, kudos";
         saveComment(name, content);
 
-        Comment dbComment = commentRepository.findByPost(post).get(0);
-        dbComment.setName("Troll comment");
-        dbComment.setContent("rude, lies");
-        dbComment.setUpdatedOn(LocalDateTime.now());
+        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
+        dbCommentEntity.setName("Troll comment");
+        dbCommentEntity.setContent("rude, lies");
+        dbCommentEntity.setUpdatedOn(LocalDateTime.now());
 
-        assertEquals(1, commentRepository.update(dbComment));
-        var comments = commentRepository.findByPost(post);
+        assertEquals(1, commentRepository.update(dbCommentEntity));
+        var comments = commentRepository.findByPost(postEntity);
 
         assertEquals(1, comments.size());
         var updated = comments.get(0);
 
         assertNotNull(updated.getUpdatedOn());
-        assertEquals(dbComment.getPostId(), updated.getPostId());
-        assertEquals(dbComment.getName(), updated.getName());
-        assertEquals(dbComment.getId(), updated.getId());
-        assertEquals(dbComment.getContent(), updated.getContent());
-        assertEquals(dbComment.getPublishedOn(), updated.getPublishedOn());
+        assertEquals(dbCommentEntity.getPostId(), updated.getPostId());
+        assertEquals(dbCommentEntity.getName(), updated.getName());
+        assertEquals(dbCommentEntity.getId(), updated.getId());
+        assertEquals(dbCommentEntity.getContent(), updated.getContent());
+        assertEquals(dbCommentEntity.getPublishedOn(), updated.getPublishedOn());
     }
 
     @Test
@@ -102,20 +102,20 @@ class CommentRepositoryTest {
         var content = "Praise, kudos";
         saveComment(name, content);
 
-        Comment dbComment = commentRepository.findByPost(post).get(0);
+        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
 
-        assertEquals(1, commentRepository.deleteById(dbComment.getId()));
+        assertEquals(1, commentRepository.deleteById(dbCommentEntity.getId()));
         assertEquals(0, commentRepository.count());
     }
 
     private void saveComment(String name, String content) {
-        Comment comment = Comment.builder()
-                .postId(post.getId())
+        CommentEntity commentEntity = CommentEntity.builder()
+                .postId(postEntity.getId())
                 .name(name)
                 .content(content)
                 .publishedOn(LocalDateTime.now())
                 .build();
-        assertEquals(1, commentRepository.save(comment));
+        assertEquals(1, commentRepository.save(commentEntity));
     }
 
     @Test
@@ -129,11 +129,11 @@ class CommentRepositoryTest {
         var comments = commentRepository.findAll();
         assertEquals(numComments, comments.size());
 
-        comments.forEach(comment -> {
-            assertEquals(name, comment.getName());
-            assertEquals(content, comment.getContent());
-            assertNotNull(comment.getPublishedOn());
-            assertNull(comment.getUpdatedOn());
+        comments.forEach(commentEntity -> {
+            assertEquals(name, commentEntity.getName());
+            assertEquals(content, commentEntity.getContent());
+            assertNotNull(commentEntity.getPublishedOn());
+            assertNull(commentEntity.getUpdatedOn());
         });
     }
 
@@ -151,6 +151,6 @@ class CommentRepositoryTest {
 
     @Test
     void findByPost() {
-        assertTrue(commentRepository.findByPost(post).isEmpty());
+        assertTrue(commentRepository.findByPost(postEntity).isEmpty());
     }
 }

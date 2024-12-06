@@ -1,6 +1,6 @@
 package dev.erickson.blog_jdbc.repository;
 
-import dev.erickson.blog_jdbc.model.Comment;
+import dev.erickson.blog_jdbc.model.CommentEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class CommentMapper implements RowMapper<Comment> {
+public class CommentMapper implements RowMapper<CommentEntity> {
     @Override
-    public Comment mapRow(ResultSet resultSet, int i) throws SQLException {
-        return Comment.builder()
+    public CommentEntity mapRow(ResultSet resultSet, int i) throws SQLException {
+        return CommentEntity.builder()
                 .id(resultSet.getLong("id"))
                 .postId(resultSet.getLong("post_id"))
                 .name(resultSet.getString("name"))
