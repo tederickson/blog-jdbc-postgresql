@@ -46,4 +46,12 @@ public class AuthorService {
     public int deleteById(Long id) {
         return authorRepository.deleteById(id);
     }
+
+    public Author update(final Author author) {
+        Assert.notNull(author.id(), "The id must not be null");
+        return authorRepository.findById(author.id())
+                .map(AuthorMapper::toRest)
+                .orElseThrow();
+    }
+
 }

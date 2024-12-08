@@ -85,7 +85,7 @@ class AuthorServiceTest {
     }
 
     @Test
-    void deleteByIdNotFound() {
+    void deleteById_NotFound() {
         int count = authorService.deleteById(-1L);
         assertEquals(0, count);
     }
