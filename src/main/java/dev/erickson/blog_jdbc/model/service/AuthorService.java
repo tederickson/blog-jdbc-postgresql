@@ -14,6 +14,10 @@ import org.springframework.util.Assert;
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
+    public Integer count() {
+        return authorRepository.count();
+    }
+
     public Author create(final Author author) {
         Assert.isNull(author.id(), "The id must be null");
 

@@ -36,10 +36,16 @@ class AuthorServiceTest {
 
     @AfterEach
     void tearDown() {
-        Long id = authorRepository.findByEmail(email)
-                .map(AuthorEntity::getId)
-                .orElseThrow();
-        authorRepository.deleteById(id);
+        var id = authorRepository.findByEmail(email)
+                .map(AuthorEntity::getId);
+        id.ifPresent(aLong -> authorRepository.deleteById(aLong));
+    }
+
+    @Test
+    void count() {
+        Integer count = authorService.count();
+        assertNotNull(count);
+        assertEquals(AUTHOR_COUNT, count);
     }
 
     @Test
