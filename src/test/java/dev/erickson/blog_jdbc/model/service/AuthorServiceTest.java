@@ -96,4 +96,13 @@ class AuthorServiceTest {
         int count = authorService.deleteById(persistedAuthor.id());
         assertEquals(1, count);
     }
+
+    @Test
+    void update() {
+        Author author1 = authorService.create(author);
+        Author updated = new Author(author1.id(), "Baba", "Yaga", email, "mythological");
+        Author peristedAuthor = authorService.update(updated);
+
+        assertEquals(authorService.findById(author1.id()).orElseThrow(), peristedAuthor);
+    }
 }
