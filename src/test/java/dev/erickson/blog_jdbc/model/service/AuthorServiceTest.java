@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class AuthorServiceTest {
@@ -73,4 +74,14 @@ class AuthorServiceTest {
         assertEquals("Christie", author1.lastName());
         assertEquals("agatha@test.net", author1.email());
     }
+
+    @Test
+    void findById() {
+        var persistedAuthor = authorService.create(author);
+        var lookup = authorService.findById(persistedAuthor.id());
+
+        assertTrue(lookup.isPresent());
+        assertEquals(persistedAuthor, lookup.get());
+    }
+
 }

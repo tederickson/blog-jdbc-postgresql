@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +37,9 @@ public class AuthorService {
 
     public List<Author> findAll() {
         return authorRepository.findAll().stream().map(AuthorMapper::toRest).toList();
+    }
+
+    public Optional<Author> findById(Long id) {
+        return authorRepository.findById(id).map(AuthorMapper::toRest);
     }
 }
