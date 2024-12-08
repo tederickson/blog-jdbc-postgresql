@@ -42,4 +42,8 @@ public class AuthorService {
     public Optional<Author> findById(Long id) {
         return authorRepository.findById(id).map(AuthorMapper::toRest);
     }
+
+    public int deleteById(Long id) {
+        return authorRepository.deleteById(id);
+    }
 }

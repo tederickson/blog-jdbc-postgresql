@@ -84,4 +84,16 @@ class AuthorServiceTest {
         assertEquals(persistedAuthor, lookup.get());
     }
 
+    @Test
+    void deleteByIdNotFound() {
+        int count = authorService.deleteById(-1L);
+        assertEquals(0, count);
+    }
+
+    @Test
+    void deleteById() {
+        Author persistedAuthor = authorService.create(author);
+        int count = authorService.deleteById(persistedAuthor.id());
+        assertEquals(1, count);
+    }
 }
