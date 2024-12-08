@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -57,5 +59,18 @@ class AuthorServiceTest {
         assertEquals(author.lastName(), persistedAuthor.lastName());
         assertEquals(author.email(), persistedAuthor.email());
         assertEquals(author.username(), persistedAuthor.username());
+    }
+
+    @Test
+    void findAll() {
+        List<Author> authors = authorService.findAll();
+        assertNotNull(authors);
+        assertEquals(AUTHOR_COUNT, authors.size());
+
+        Author author1 = authors.get(0);
+        assertEquals("agatha", author1.username());
+        assertEquals("Agatha", author1.firstName());
+        assertEquals("Christie", author1.lastName());
+        assertEquals("agatha@test.net", author1.email());
     }
 }

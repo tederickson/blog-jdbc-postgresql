@@ -9,6 +9,8 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthorService {
@@ -30,5 +32,9 @@ public class AuthorService {
 
         return AuthorMapper.toRest(authorRepository.findByEmail(author.email())
                                            .orElseThrow(() -> new DataRetrievalFailureException(author.email())));
+    }
+
+    public List<Author> findAll() {
+        return authorRepository.findAll().stream().map(AuthorMapper::toRest).toList();
     }
 }
