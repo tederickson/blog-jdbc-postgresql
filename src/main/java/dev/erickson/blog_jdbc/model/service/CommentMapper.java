@@ -7,27 +7,27 @@ public class CommentMapper {
     private CommentMapper() {
     }
 
-    public static Comment toRest(final CommentEntity persistCommentEntity) {
+    public static Comment toRest(final CommentEntity commentEntity) {
         var builder = Comment.builder();
         return builder
-                .id(persistCommentEntity.getId())
-                .postId(persistCommentEntity.getPostId())
-                .name(persistCommentEntity.getName())
-                .content(persistCommentEntity.getContent())
-                .publishedOn(persistCommentEntity.getPublishedOn())
-                .updatedOn(persistCommentEntity.getUpdatedOn())
+                .id(commentEntity.getId())
+                .postId(commentEntity.getPostId())
+                .name(commentEntity.getName())
+                .content(commentEntity.getContent())
+                .publishedOn(commentEntity.getPublishedOn())
+                .updatedOn(commentEntity.getUpdatedOn())
                 .build();
     }
 
-    public static CommentEntity toEntity(final Comment persistCommentEntity) {
+    public static CommentEntity toEntity(final Comment comment) {
         var builder = CommentEntity.builder();
         return builder
-                .id(persistCommentEntity.id())
-                .postId(persistCommentEntity.postId())
-                .name(persistCommentEntity.name())
-                .content(persistCommentEntity.content())
-                .publishedOn(persistCommentEntity.publishedOn())
-                .updatedOn(persistCommentEntity.updatedOn())
+                .id(comment.id())
+                .postId(comment.postId())
+                .name(comment.name())
+                .content(comment.content())
+                .publishedOn(comment.publishedOn())
+                .updatedOn(comment.updatedOn())
                 .build();
     }
 }

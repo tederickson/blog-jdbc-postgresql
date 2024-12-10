@@ -7,14 +7,14 @@ public class AuthorMapper {
     private AuthorMapper() {
     }
 
-    public static Author toRest(final AuthorEntity persistAuthorEntity) {
+    public static Author toRest(final AuthorEntity authorEntity) {
         var builder = Author.builder();
         return builder
-                .id(persistAuthorEntity.getId())
-                .firstName(persistAuthorEntity.getFirstName())
-                .lastName(persistAuthorEntity.getLastName())
-                .email(persistAuthorEntity.getEmail())
-                .username(persistAuthorEntity.getUsername()).build();
+                .id(authorEntity.getId())
+                .firstName(authorEntity.getFirstName())
+                .lastName(authorEntity.getLastName())
+                .email(authorEntity.getEmail())
+                .username(authorEntity.getUsername()).build();
     }
 
     public static AuthorEntity toEntity(final Author author) {

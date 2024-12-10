@@ -44,9 +44,13 @@ public class CommentService {
         return commentRepository.deleteById(id);
     }
 
-    public Comment update(final Comment comment) {
+    public Comment update(final Comment comment) throws SQLException {
         Assert.notNull(comment.id(), "The id must not be null");
         Assert.notNull(comment.postId(), "The Post ID must not be null");
+
+        CommentEntity entity = CommentMapper.toEntity(comment);
+        int rowsChanged = commentRepository.update(entity);
+        if (rowsChanged != 1) {throw new SQLException("Unable to update.  Rows changed = " + rowsChanged);}
 
         return commentRepository.findById(comment.id())
                 .map(CommentMapper::toRest)
