@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,7 +57,7 @@ class CommentEntityRepositoryTest {
     }
 
     @Test
-    void save() {
+    void save() throws SQLException {
         assertEquals(0, commentRepository.count());
 
         var name = "Friendly comment";
@@ -72,12 +73,12 @@ class CommentEntityRepositoryTest {
     }
 
     @Test
-    void update() {
+    void update() throws SQLException {
         var name = "Friendly comment";
         var content = "Praise, kudos";
-        saveComment(name, content);
+        var commentId = saveComment(name, content);
 
-        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
+        CommentEntity dbCommentEntity = commentRepository.findById(commentId).orElseThrow();
         dbCommentEntity.setName("Troll comment");
         dbCommentEntity.setContent("rude, lies");
         dbCommentEntity.setUpdatedOn(LocalDateTime.now());
@@ -97,29 +98,31 @@ class CommentEntityRepositoryTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteById() throws SQLException {
         var name = "Friendly comment";
         var content = "Praise, kudos";
-        saveComment(name, content);
+        var commentId = saveComment(name, content);
 
         CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
+        CommentEntity sameEntity = commentRepository.findById(commentId).orElseThrow();
+
+        assertEquals(dbCommentEntity, sameEntity);
 
         assertEquals(1, commentRepository.deleteById(dbCommentEntity.getId()));
         assertEquals(0, commentRepository.count());
     }
 
-    private void saveComment(String name, String content) {
+    private Long saveComment(String name, String content) throws SQLException {
         CommentEntity commentEntity = CommentEntity.builder()
                 .postId(postEntity.getId())
                 .name(name)
                 .content(content)
-                .publishedOn(LocalDateTime.now())
                 .build();
-        assertEquals(1, commentRepository.save(commentEntity));
+        return commentRepository.save(commentEntity);
     }
 
     @Test
-    void findAll() {
+    void findAll() throws SQLException {
         var name = "Friendly comment";
         var content = "Praise, kudos";
         var numComments = 5;
@@ -138,7 +141,7 @@ class CommentEntityRepositoryTest {
     }
 
     @Test
-    void findById() {
+    void findById() throws SQLException {
         assertEquals(0, commentRepository.count());
 
         saveComment("Bob", "Bob critiques post");
