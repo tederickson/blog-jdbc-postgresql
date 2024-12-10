@@ -49,9 +49,10 @@ public class AuthorService {
 
     public Author update(final Author author) {
         Assert.notNull(author.id(), "The id must not be null");
-        return authorRepository.findById(author.id())
-                .map(AuthorMapper::toRest)
-                .orElseThrow();
+        authorRepository.findById(author.id()).orElseThrow();
+        authorRepository.update(AuthorMapper.toEntity(author));
+
+        return authorRepository.findById(author.id()).map(AuthorMapper::toRest).orElseThrow();
     }
 
 }

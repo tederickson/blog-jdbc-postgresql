@@ -10,8 +10,6 @@ public interface DAO<T> {
 
     Optional<T> findById(Long id);
 
-    int save(T t);
-
     int update(T t);
 
     int deleteById(Long id);

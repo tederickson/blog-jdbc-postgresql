@@ -4,6 +4,9 @@ import dev.erickson.blog_jdbc.domain.Author;
 import dev.erickson.blog_jdbc.model.AuthorEntity;
 
 public class AuthorMapper {
+    private AuthorMapper() {
+    }
+
     public static Author toRest(final AuthorEntity persistAuthorEntity) {
         var builder = Author.builder();
         return builder
