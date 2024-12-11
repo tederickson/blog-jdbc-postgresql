@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -65,6 +66,13 @@ class AuthorServiceTest {
     }
 
     @Test
+    void create_invalid() {
+        var exception = assertThrows(IllegalArgumentException.class,
+                                     () -> authorService.create(Author.builder().id(123L).build()));
+        assertEquals("The id must be null", exception.getMessage());
+    }
+
+    @Test
     void findAll() {
         List<Author> authors = authorService.findAll();
         assertNotNull(authors);
@@ -106,5 +114,12 @@ class AuthorServiceTest {
         Author peristedAuthor = authorService.update(updated);
 
         assertEquals(authorService.findById(author1.id()).orElseThrow(), peristedAuthor);
+    }
+
+    @Test
+    void update_invalid() {
+        var exception = assertThrows(IllegalArgumentException.class,
+                                     () -> authorService.update(Author.builder().build()));
+        assertEquals("The id must not be null", exception.getMessage());
     }
 }
