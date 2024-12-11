@@ -2,7 +2,6 @@ package dev.erickson.blog_jdbc.repository;
 
 import dev.erickson.blog_jdbc.model.AuthorEntity;
 import dev.erickson.blog_jdbc.model.PostEntity;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,22 +42,11 @@ class PostEntityRepositoryTest {
         final AuthorEntity dbAuthorEntity = authorRepository.findByEmail(email).orElseThrow();
 
         postEntity = PostEntity.builder()
-                .authorEntity(dbAuthorEntity)
+                .authorId(dbAuthorEntity.getId())
                 .title(TITLE)
                 .content("Blah de blah blah")
                 .publishedOn(LocalDateTime.now())
-                .commentEntities(List.of())
                 .build();
-    }
-
-    @AfterEach
-    void tearDown() {
-        List<PostEntity> postEntities = postRepository.findByTitle(TITLE);
-
-        postEntities.forEach(post -> postRepository.deleteById(post.getId()));
-
-        var id = authorRepository.findByEmail(email).map(AuthorEntity::getId).orElseThrow();
-        assertEquals(1, authorRepository.deleteById(id));
     }
 
     @Test

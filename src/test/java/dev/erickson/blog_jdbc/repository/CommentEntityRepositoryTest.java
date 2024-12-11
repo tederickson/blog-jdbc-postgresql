@@ -39,7 +39,7 @@ class CommentEntityRepositoryTest {
         AuthorEntity authorEntity = authorRepository.findById(AUTHOR_ID).orElseThrow();
 
         postRepository.save(PostEntity.builder()
-                                    .authorEntity(authorEntity)
+                                    .authorId(authorEntity.getId())
                                     .title(TITLE)
                                     .content("A Jules Version post")
                                     .publishedOn(LocalDateTime.now())

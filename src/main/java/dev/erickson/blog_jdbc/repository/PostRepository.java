@@ -13,7 +13,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostRepository implements DAO<PostEntity> {
     private final JdbcTemplate jdbcTemplate;
-    private final PostEntityMapper postEntityMapper;
 
     public Integer count() {
         return jdbcTemplate
@@ -21,19 +20,19 @@ public class PostRepository implements DAO<PostEntity> {
     }
 
     public int save(PostEntity postEntity) {
-        Assert.notNull(postEntity.getAuthorEntity(), "missing Author");
+        Assert.notNull(postEntity.getAuthorId(), "missing Author");
         return jdbcTemplate.update(
-                "insert into post (title, content, published_on, author) values(?,?,?,?)",
+                "insert into post (title, content, published_on, author_id) values(?,?,?,?)",
                 postEntity.getTitle(), postEntity.getContent(), postEntity.getPublishedOn(),
-                postEntity.getAuthorEntity().getId());
+                postEntity.getAuthorId());
     }
 
     public int update(PostEntity postEntity) {
-        Assert.notNull(postEntity.getAuthorEntity(), "missing Author");
+        Assert.notNull(postEntity.getAuthorId(), "missing Author");
         return jdbcTemplate.update(
-                "update post set title=?, content=?, published_on=?, updated_on=?, author=? where id = ?",
+                "update post set title=?, content=?, published_on=?, updated_on=?, author_id=? where id = ?",
                 postEntity.getTitle(), postEntity.getContent(), postEntity.getPublishedOn(), postEntity.getUpdatedOn(),
-                postEntity.getAuthorEntity().getId(), postEntity.getId());
+                postEntity.getAuthorId(), postEntity.getId());
     }
 
     public int deleteById(Long id) {
@@ -43,17 +42,17 @@ public class PostRepository implements DAO<PostEntity> {
     }
 
     public List<PostEntity> findAll() {
-        return jdbcTemplate.query("select * from post", postEntityMapper);
+        return jdbcTemplate.query("select * from post", new PostEntityMapper());
     }
 
     public Optional<PostEntity> findById(Long id) {
-        return jdbcTemplate.query("select * from post where id = ?", postEntityMapper, id)
+        return jdbcTemplate.query("select * from post where id = ?", new PostEntityMapper(), id)
                 .stream()
                 .findFirst();
     }
 
     public List<PostEntity> findByTitle(String title) {
-        return jdbcTemplate.query("select * from post where title = ?", postEntityMapper, title)
+        return jdbcTemplate.query("select * from post where title = ?", new PostEntityMapper(), title)
                 .stream()
                 .toList();
     }

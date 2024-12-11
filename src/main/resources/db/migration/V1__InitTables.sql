@@ -16,9 +16,9 @@ CREATE TABLE Post (
   content TEXT NOT NULL,
   published_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP,
-  author INT,
+  author_id INT,
 
-  FOREIGN key (author) REFERENCES Author (id)
+  FOREIGN key (author_id) REFERENCES Author (id)
 );
 CREATE UNIQUE INDEX ON Post (title);
 
