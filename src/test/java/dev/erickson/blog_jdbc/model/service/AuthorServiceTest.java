@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @Sql("/data/InitializeTests.sql")
 class AuthorServiceTest {
-    private final static String email = "ted.erickson@invalid.org";
+    private final static String email = "ted.erickson@invalid.AuthorServiceTest";
     private final static int AUTHOR_COUNT = 6;
 
     @Autowired

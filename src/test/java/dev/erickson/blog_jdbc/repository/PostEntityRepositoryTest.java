@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class PostEntityRepositoryTest {
 
     public static final String TITLE = "My Test Post";
-    private final static String email = "ted.post@invalid.org";
+    private final static String email = "ted.post@invalid.PostEntityRepositoryTest";
 
     @Autowired
     PostRepository postRepository;
