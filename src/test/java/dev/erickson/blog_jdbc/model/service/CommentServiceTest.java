@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @Sql("/data/InitializeTests.sql")
@@ -59,8 +60,13 @@ class CommentServiceTest {
                 .content(content)
                 .postId(postEntity.getId()).build();
 
-      Comment persistedComment =  commentService.create(comment);
-      assertNotNull(persistedComment);
+        Comment persistedComment = commentService.create(comment);
+        assertNotNull(persistedComment);
+        assertNotNull(persistedComment.id());
+        assertEquals(comment.postId(), persistedComment.postId());
+        assertNotNull(persistedComment.publishedOn());
+        assertNull(comment.updatedOn());
+        assertEquals(comment.content(), persistedComment.content());
     }
 
     @Test
