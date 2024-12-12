@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Sql("/data/InitializeTests.sql")
@@ -29,7 +30,8 @@ class CommentServiceTest {
     @Autowired
     private CommentService commentService;
 
-    private PostEntity postEntity;
+    private Long postId;
+    private Comment comment;
 
     @BeforeEach
     void setUp() {
@@ -43,38 +45,59 @@ class CommentServiceTest {
                 .build();
         assertEquals(1, postRepository.save(postEntityCreate));
 
-        postEntity = postRepository.findByTitle(TITLE).get(0);
+        PostEntity postEntity = postRepository.findByTitle(TITLE).get(0);
+        postId = postEntity.getId();
+
+        comment = Comment.builder()
+                .name("Friendly comment")
+                .content("Praise, kudos")
+                .postId(postId).build();
     }
 
     @Test
-    void count() {
+    void count() throws SQLException {
         assertEquals(0, commentService.count());
+
+//        final int commentCount = 5;
+//        for (int i = 0; i < commentCount; i++) {commentService.create(comment);}
+//
+//        assertEquals(commentCount, commentService.count());
     }
 
     @Test
     void create() throws SQLException {
-        var name = "Friendly comment";
-        var content = "Praise, kudos";
-        Comment comment = Comment.builder()
-                .name(name)
-                .content(content)
-                .postId(postEntity.getId()).build();
-
         Comment persistedComment = commentService.create(comment);
+
         assertNotNull(persistedComment);
         assertNotNull(persistedComment.id());
-        assertEquals(comment.postId(), persistedComment.postId());
+        assertEquals(postId, persistedComment.postId());
         assertNotNull(persistedComment.publishedOn());
         assertNull(comment.updatedOn());
         assertEquals(comment.content(), persistedComment.content());
     }
 
     @Test
-    void findAll() {
+    void findAll() throws SQLException {
+        assertTrue(commentService.findAll().isEmpty());
+
+        final int commentCount = 5;
+        for (int i = 0; i < commentCount; i++) {commentService.create(comment);}
+
+        assertEquals(commentCount, commentService.findAll().size());
+    }
+
+
+    @Test
+    void findById_notFound() {
+        assertTrue(commentService.findById(-1L).isEmpty());
     }
 
     @Test
-    void findById() {
+    void findById() throws SQLException {
+        Comment persisted = commentService.create(comment);
+        Comment located = commentService.findById(persisted.id()).orElseThrow();
+
+        assertEquals(persisted, located);
     }
 
     @Test
