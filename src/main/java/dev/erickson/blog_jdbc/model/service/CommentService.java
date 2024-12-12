@@ -38,14 +38,17 @@ public class CommentService {
     }
 
     public Optional<Comment> findById(Long id) {
+        Assert.notNull(id, "The id must not be null");
         return commentRepository.findById(id).map(CommentMapper::toRest);
     }
 
-    public List<CommentEntity> findByPost(PostEntity postEntity) {
-        return commentRepository.findByPost(postEntity);
+    public List<Comment> findByPost(PostEntity postEntity) {
+        Assert.notNull(postEntity, "The postEntity must not be null");
+        return commentRepository.findByPost(postEntity).stream().map(CommentMapper::toRest).toList();
     }
 
     public int deleteById(Long id) {
+        Assert.notNull(id, "The id must not be null");
         return commentRepository.deleteById(id);
     }
 

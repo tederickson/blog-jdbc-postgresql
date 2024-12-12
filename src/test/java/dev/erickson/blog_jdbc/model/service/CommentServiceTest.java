@@ -30,7 +30,7 @@ class CommentServiceTest {
     @Autowired
     private CommentService commentService;
 
-    private Long postId;
+    private PostEntity postEntity;
     private Comment comment;
 
     @BeforeEach
@@ -45,23 +45,17 @@ class CommentServiceTest {
                 .build();
         assertEquals(1, postRepository.save(postEntityCreate));
 
-        PostEntity postEntity = postRepository.findByTitle(TITLE).get(0);
-        postId = postEntity.getId();
+        postEntity = postRepository.findByTitle(TITLE).get(0);
 
         comment = Comment.builder()
                 .name("Friendly comment")
                 .content("Praise, kudos")
-                .postId(postId).build();
+                .postId(postEntity.getId()).build();
     }
 
     @Test
     void count() throws SQLException {
         assertEquals(0, commentService.count());
-
-//        final int commentCount = 5;
-//        for (int i = 0; i < commentCount; i++) {commentService.create(comment);}
-//
-//        assertEquals(commentCount, commentService.count());
     }
 
     @Test
@@ -70,7 +64,7 @@ class CommentServiceTest {
 
         assertNotNull(persistedComment);
         assertNotNull(persistedComment.id());
-        assertEquals(postId, persistedComment.postId());
+        assertEquals(comment.postId(), persistedComment.postId());
         assertNotNull(persistedComment.publishedOn());
         assertNull(comment.updatedOn());
         assertEquals(comment.content(), persistedComment.content());
@@ -101,11 +95,23 @@ class CommentServiceTest {
     }
 
     @Test
-    void findByPost() {
+    void findByPost() throws SQLException {
+        Comment persisted = commentService.create(comment);
+        var comments = commentService.findByPost(postEntity);
+
+        assertEquals(1, comments.size());
+        assertEquals(persisted, comments.get(0));
     }
 
     @Test
-    void deleteById() {
+    void deleteById_notFound() {
+        assertEquals(0, commentService.deleteById(-123L));
+    }
+
+    @Test
+    void deleteById() throws SQLException {
+        Comment saved = commentService.create(comment);
+        assertEquals(1, commentService.deleteById(saved.id()));
     }
 
     @Test
