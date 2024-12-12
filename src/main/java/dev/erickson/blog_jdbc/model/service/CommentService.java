@@ -2,6 +2,7 @@ package dev.erickson.blog_jdbc.model.service;
 
 import dev.erickson.blog_jdbc.domain.Comment;
 import dev.erickson.blog_jdbc.model.CommentEntity;
+import dev.erickson.blog_jdbc.model.PostEntity;
 import dev.erickson.blog_jdbc.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,10 @@ public class CommentService {
         return commentRepository.findById(id).map(CommentMapper::toRest);
     }
 
+    public List<CommentEntity> findByPost(PostEntity postEntity) {
+        return commentRepository.findByPost(postEntity);
+    }
+
     public int deleteById(Long id) {
         return commentRepository.deleteById(id);
     }
@@ -56,5 +61,4 @@ public class CommentService {
                 .map(CommentMapper::toRest)
                 .orElseThrow();
     }
-
 }
