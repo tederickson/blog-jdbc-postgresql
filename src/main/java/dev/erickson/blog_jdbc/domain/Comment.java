@@ -4,7 +4,7 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Builder
+@Builder(toBuilder = true)
 public record Comment(Long id,
                       Long postId,
                       String name,

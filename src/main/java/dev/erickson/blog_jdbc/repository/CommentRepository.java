@@ -35,8 +35,7 @@ public class CommentRepository implements DAO<CommentEntity> {
     }
 
     public Integer count() {
-        return jdbcTemplate
-                .queryForObject("select count(*) from comment", Integer.class);
+        return jdbcTemplate.queryForObject("select count(*) from comment", Integer.class);
     }
 
     public Long save(CommentEntity commentEntity) throws SQLException {
@@ -69,9 +68,7 @@ public class CommentRepository implements DAO<CommentEntity> {
     }
 
     public int deleteById(Long id) {
-        return jdbcTemplate.update(
-                "delete from comment where id = ?",
-                id);
+        return jdbcTemplate.update("delete from comment where id = ?", id);
     }
 
     public List<CommentEntity> findAll() {

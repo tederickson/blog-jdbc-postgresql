@@ -105,6 +105,11 @@ class CommentServiceTest {
     }
 
     @Test
+    void findByPost_nullPost() {
+        assertThrows(IllegalArgumentException.class, () -> commentService.findByPost(null));
+    }
+
+    @Test
     void deleteById_notFound() {
         assertEquals(0, commentService.deleteById(-123L));
     }
@@ -117,10 +122,17 @@ class CommentServiceTest {
     @Test
     void deleteById() throws SQLException {
         Comment saved = commentService.create(comment);
-        assertEquals(1, commentService.deleteById(saved.id()));
+        var id = saved.id();
+        assertEquals(1, commentService.deleteById(id));
     }
 
     @Test
-    void update() {
+    void update() throws SQLException {
+        Comment persisted = commentService.create(comment);
+        Comment updated = persisted.toBuilder()
+                .name("Rude comment")
+                .content("Troll troll troll").build();
+
+        assertEquals(updated, commentService.update(updated));
     }
 }
