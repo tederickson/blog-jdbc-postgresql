@@ -108,7 +108,7 @@ class AuthorEntityRepositoryTest {
         assertNotNull(authorEntities);
         assertEquals(AUTHOR_COUNT, authorEntities.size());
 
-        AuthorEntity dbAuthorEntity = authorEntities.get(0);
+        AuthorEntity dbAuthorEntity = authorEntities.getFirst();
         assertEquals("agatha", dbAuthorEntity.getUsername());
         assertEquals("Agatha", dbAuthorEntity.getFirstName());
         assertEquals("Christie", dbAuthorEntity.getLastName());

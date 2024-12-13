@@ -62,7 +62,7 @@ class PostEntityRepositoryTest {
     @Test
     void update() {
         assertEquals(1, postRepository.save(postEntity));
-        final var dbPost = postRepository.findByTitle(TITLE).get(0);
+        final var dbPost = postRepository.findByTitle(TITLE).getFirst();
 
         assertNull(dbPost.getUpdatedOn());
 

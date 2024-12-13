@@ -78,7 +78,7 @@ class AuthorServiceTest {
         assertNotNull(authors);
         assertEquals(AUTHOR_COUNT, authors.size());
 
-        Author author1 = authors.get(0);
+        Author author1 = authors.getFirst();
         assertEquals("agatha", author1.username());
         assertEquals("Agatha", author1.firstName());
         assertEquals("Christie", author1.lastName());

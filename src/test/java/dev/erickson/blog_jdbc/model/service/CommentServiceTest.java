@@ -46,7 +46,7 @@ class CommentServiceTest {
                 .build();
         assertEquals(1, postRepository.save(postEntityCreate));
 
-        postEntity = postRepository.findByTitle(TITLE).get(0);
+        postEntity = postRepository.findByTitle(TITLE).getFirst();
 
         comment = Comment.builder()
                 .name("Friendly comment")
@@ -101,7 +101,7 @@ class CommentServiceTest {
         var comments = commentService.findByPost(postEntity);
 
         assertEquals(1, comments.size());
-        assertEquals(persisted, comments.get(0));
+        assertEquals(persisted, comments.getFirst());
     }
 
     @Test

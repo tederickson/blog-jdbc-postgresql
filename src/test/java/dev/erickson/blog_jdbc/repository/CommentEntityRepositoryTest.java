@@ -44,7 +44,7 @@ class CommentEntityRepositoryTest {
                                     .content("A Jules Version post")
                                     .publishedOn(LocalDateTime.now())
                                     .build());
-        postEntity = postRepository.findByTitle(TITLE).get(0);
+        postEntity = postRepository.findByTitle(TITLE).getFirst();
     }
 
     @AfterEach
@@ -67,7 +67,7 @@ class CommentEntityRepositoryTest {
         saveComment(name, content);
         assertEquals(1, commentRepository.count());
 
-        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
+        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).getFirst();
         assertEquals(name, dbCommentEntity.getName());
         assertEquals(content, dbCommentEntity.getContent());
         assertNotNull(dbCommentEntity.getPublishedOn());
@@ -89,7 +89,7 @@ class CommentEntityRepositoryTest {
         var comments = commentRepository.findByPost(postEntity);
 
         assertEquals(1, comments.size());
-        var updated = comments.get(0);
+        var updated = comments.getFirst();
 
         assertNotNull(updated.getUpdatedOn());
         assertEquals(dbCommentEntity.getPostId(), updated.getPostId());
@@ -105,7 +105,7 @@ class CommentEntityRepositoryTest {
         var content = "Praise, kudos";
         var commentId = saveComment(name, content);
 
-        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).get(0);
+        CommentEntity dbCommentEntity = commentRepository.findByPost(postEntity).getFirst();
         CommentEntity sameEntity = commentRepository.findById(commentId).orElseThrow();
 
         assertEquals(dbCommentEntity, sameEntity);
@@ -150,8 +150,8 @@ class CommentEntityRepositoryTest {
         var comments = commentRepository.findAll();
         assertEquals(1, comments.size());
 
-        var comment = commentRepository.findById(comments.get(0).getId()).orElseThrow();
-        assertEquals(comments.get(0), comment);
+        var comment = commentRepository.findById(comments.getFirst().getId()).orElseThrow();
+        assertEquals(comments.getFirst(), comment);
     }
 
     @Test
