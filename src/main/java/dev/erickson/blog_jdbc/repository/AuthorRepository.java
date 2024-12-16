@@ -4,12 +4,13 @@ import dev.erickson.blog_jdbc.model.AuthorEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Transactional
 public class AuthorRepository implements DAO<AuthorEntity> {
     private final JdbcTemplate jdbcTemplate;
 

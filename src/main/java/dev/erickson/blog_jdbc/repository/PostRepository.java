@@ -4,13 +4,14 @@ import dev.erickson.blog_jdbc.model.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Transactional
 public class PostRepository implements DAO<PostEntity> {
     private final JdbcTemplate jdbcTemplate;
 

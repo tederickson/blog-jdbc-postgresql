@@ -5,6 +5,7 @@ import dev.erickson.blog_jdbc.model.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.sql.Connection;
@@ -20,9 +21,9 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class CommentRepository implements DAO<CommentEntity> {
     private final JdbcTemplate jdbcTemplate;
-    private final CommentEntityMapper commentEntityMapper;
 
     private static Long getKey(PreparedStatement statement) throws SQLException {
         // getLong(1) retrieves the first generated key from ResultSet. If the insert operation produces multiple
@@ -72,16 +73,17 @@ public class CommentRepository implements DAO<CommentEntity> {
     }
 
     public List<CommentEntity> findAll() {
-        return jdbcTemplate.query("select * from comment", commentEntityMapper);
+        return jdbcTemplate.query("select * from comment", new CommentEntityMapper());
     }
 
     public Optional<CommentEntity> findById(Long id) {
-        return jdbcTemplate.query("select * from comment where id = ?", commentEntityMapper, id)
+        return jdbcTemplate.query("select * from comment where id = ?", new CommentEntityMapper(), id)
                 .stream()
                 .findFirst();
     }
 
     public List<CommentEntity> findByPost(PostEntity postEntity) {
-        return jdbcTemplate.query("select * from comment where post_id = ?", commentEntityMapper, postEntity.getId());
+        return jdbcTemplate.query("select * from comment where post_id = ?", new CommentEntityMapper(),
+                                  postEntity.getId());
     }
 }
