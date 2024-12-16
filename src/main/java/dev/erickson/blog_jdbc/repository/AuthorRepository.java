@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor @Transactional
+@RequiredArgsConstructor
+@Transactional
 public class AuthorRepository implements DAO<AuthorEntity> {
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,13 +23,15 @@ public class AuthorRepository implements DAO<AuthorEntity> {
     public int save(AuthorEntity authorEntity) {
         return jdbcTemplate.update(
                 "insert into author (first_name, last_name, email, username) values(?,?,?,?)",
-                authorEntity.getFirstName(), authorEntity.getLastName(), authorEntity.getEmail(), authorEntity.getUsername());
+                authorEntity.getFirstName(), authorEntity.getLastName(), authorEntity.getEmail(),
+                authorEntity.getUsername());
     }
 
     public int update(AuthorEntity authorEntity) {
         return jdbcTemplate.update(
                 "update author set first_name=?, last_name=?, email=?, username=? where id = ?",
-                authorEntity.getFirstName(), authorEntity.getLastName(), authorEntity.getEmail(), authorEntity.getUsername(), authorEntity.getId());
+                authorEntity.getFirstName(), authorEntity.getLastName(), authorEntity.getEmail(),
+                authorEntity.getUsername(), authorEntity.getId());
     }
 
     public int deleteById(Long id) {

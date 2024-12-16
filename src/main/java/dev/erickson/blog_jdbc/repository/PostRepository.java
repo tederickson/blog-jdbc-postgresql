@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor @Transactional
+@RequiredArgsConstructor
+@Transactional
 public class PostRepository implements DAO<PostEntity> {
     private final JdbcTemplate jdbcTemplate;
 

@@ -50,12 +50,15 @@ public class CommentRepository implements DAO<CommentEntity> {
         statement.setString(3, commentEntity.getContent());
         statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
 
-        int numRows = statement.executeUpdate();
+        final int numRows = statement.executeUpdate();
         if (numRows != 1) {
             throw new SQLException("Unable to save " + commentEntity);
         }
 
-        return getKey(statement);
+        final Long rowKey = getKey(statement);
+        connection.close();
+
+        return rowKey;
     }
 
     public int update(CommentEntity commentEntity) {
