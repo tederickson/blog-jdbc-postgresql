@@ -5,6 +5,9 @@ import dev.erickson.blog_jdbc.model.PostEntity;
 import org.springframework.util.Assert;
 
 public class PostMapper {
+    private PostMapper() {
+    }
+
     public static Post toRest(final PostEntity persistPostEntity) {
         var builder = Post.builder();
         return builder
@@ -29,5 +32,4 @@ public class PostMapper {
                 .updatedOn(post.getUpdatedOn())
                 .build();
     }
-
 }
