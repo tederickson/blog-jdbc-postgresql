@@ -1,12 +1,16 @@
 package dev.erickson.blog_jdbc.model.service;
 
 import dev.erickson.blog_jdbc.domain.Post;
+import dev.erickson.blog_jdbc.model.PostEntity;
 import dev.erickson.blog_jdbc.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +28,48 @@ public class PostService {
 
         for (var postEntity : postRepository.findAll().stream().toList()) {
             Post post = PostMapper.toRest(postEntity);
+
             post.setAuthor(authorService.findById(postEntity.getAuthorId()).orElseThrow());
             post.setComments(commentService.findByPost(postEntity));
         }
 
         return posts;
+    }
+
+    public Post create(final Post post) throws SQLException {
+        Assert.isNull(post.getId(), "The id must be null");
+
+        PostEntity postEntity = PostMapper.toEntity(post);
+        Long postId = postRepository.save(postEntity);
+
+        if (post.getComments() != null) {
+            for (var comment : post.getComments()) {commentService.create(comment, postId);}
+        }
+
+        return findById(postId).orElseThrow();
+    }
+
+    public Optional<Post> findById(Long id) {
+        var optionalPostEntity = postRepository.findById(id);
+
+        if (optionalPostEntity.isEmpty()) {return Optional.empty();}
+
+        PostEntity postEntity = optionalPostEntity.get();
+        Post post = PostMapper.toRest(postEntity);
+
+        post.setAuthor(authorService.findById(postEntity.getAuthorId()).orElseThrow());
+        post.setComments(commentService.findByPost(postEntity));
+
+        return Optional.of(post);
+    }
+
+    public int deleteById(Long id) {
+        var possiblePost = postRepository.findById(id);
+        if (possiblePost.isEmpty()) {return 0;}
+
+        commentService.findByPost(possiblePost.get())
+                .forEach(comment -> commentService.deleteById(comment.id()));
+
+        return postRepository.deleteById(id);
     }
 }

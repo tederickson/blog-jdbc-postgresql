@@ -33,6 +33,16 @@ public class CommentService {
         return CommentMapper.toRest(commentRepository.findById(id).orElseThrow());
     }
 
+    public void create(final Comment comment, final Long postId) throws SQLException {
+        Assert.isNull(comment.id(), "The id must be null");
+        Assert.notNull(postId, "The Post ID must not be null");
+
+        CommentEntity commentEntity = CommentMapper.toEntity(comment);
+        commentEntity.setPostId(postId);
+        commentEntity.setPublishedOn(LocalDateTime.now());
+        commentRepository.save(commentEntity);
+    }
+
     public List<Comment> findAll() {
         return commentRepository.findAll().stream().map(CommentMapper::toRest).toList();
     }
