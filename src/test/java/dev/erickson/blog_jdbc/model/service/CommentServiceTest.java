@@ -59,6 +59,7 @@ class CommentServiceTest {
 
     @Test
     void create() throws SQLException {
+        assertEquals(0, commentService.count());
         Comment persistedComment = commentService.create(comment);
 
         assertNotNull(persistedComment);
@@ -67,6 +68,8 @@ class CommentServiceTest {
         assertNotNull(persistedComment.publishedOn());
         assertNull(comment.updatedOn());
         assertEquals(comment.content(), persistedComment.content());
+
+        assertEquals(1, commentService.count());
     }
 
     @Test
@@ -77,6 +80,7 @@ class CommentServiceTest {
         for (int i = 0; i < commentCount; i++) {commentService.create(comment);}
 
         assertEquals(commentCount, commentService.findAll().size());
+        assertEquals(commentCount, commentService.count());
     }
 
 
