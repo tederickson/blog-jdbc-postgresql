@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDateTime;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,7 +45,6 @@ class PostEntityRepositoryTest {
                 .authorId(dbAuthorEntity.getId())
                 .title(TITLE)
                 .content("Blah de blah blah")
-                .publishedOn(LocalDateTime.now())
                 .build();
     }
 
@@ -55,43 +54,43 @@ class PostEntityRepositoryTest {
     }
 
     @Test
-    void save() {
-        assertEquals(1, postRepository.save(postEntity));
+    void save() throws SQLException {
+        var postId = postRepository.save(postEntity);
+        assertEquals(1, postRepository.count());
+        var possibleEntity = postRepository.findById(postId);
+
+        assertTrue(possibleEntity.isPresent());
+        var dbPost = possibleEntity.get();
+
+        assertEquals(TITLE, dbPost.getTitle());
     }
 
     @Test
-    void update() {
-        assertEquals(1, postRepository.save(postEntity));
-        final var dbPost = postRepository.findByTitle(TITLE).getFirst();
+    void update() throws SQLException {
+        final var postId = postRepository.save(postEntity);
+        final var dbPost = postRepository.findById(postId).orElseThrow();
 
         assertNull(dbPost.getUpdatedOn());
 
-        postEntity.setId(dbPost.getId());
-        assertEquals(postEntity, dbPost);
-
         String content = "Generations of art";
         dbPost.setContent(content);
-        dbPost.setUpdatedOn(LocalDateTime.now());
 
         assertEquals(1, postRepository.update(dbPost));
 
-        var updatedPost = postRepository.findById(postEntity.getId()).orElseThrow();
+        final var updatedPost = postRepository.findById(postId).orElseThrow();
         assertEquals(content, updatedPost.getContent());
 
         assertNotNull(updatedPost.getUpdatedOn());
     }
 
     @Test
-    void deleteById() {
+    void deleteById() throws SQLException {
         assertEquals(0, postRepository.deleteById(-1L));
 
-        postRepository.save(postEntity);
+        final var id = postRepository.save(postEntity);
 
-        final var id = postRepository.findByTitle(TITLE).stream()
-                .map(PostEntity::getId)
-                .findFirst()
-                .orElseThrow();
         assertEquals(1, postRepository.deleteById(id));
+        assertEquals(0, postRepository.count());
     }
 
     @Test

@@ -35,7 +35,7 @@ class CommentEntityRepositoryTest {
     private PostEntity postEntity;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
         AuthorEntity authorEntity = authorRepository.findById(AUTHOR_ID).orElseThrow();
 
         postRepository.save(PostEntity.builder()

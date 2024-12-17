@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,27 +34,26 @@ class CommentServiceTest {
     private Comment comment;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
         Author author = authorService.findById(2L).orElseThrow();
 
         final PostEntity postEntityCreate = PostEntity.builder()
                 .authorId(author.id())
                 .title(TITLE)
                 .content("CommentServiceTest CommentServiceTest CommentServiceTest")
-                .publishedOn(LocalDateTime.now())
                 .build();
-        assertEquals(1, postRepository.save(postEntityCreate));
+        final long postId = postRepository.save(postEntityCreate);
 
-        postEntity = postRepository.findByTitle(TITLE).getFirst();
+        postEntity = postRepository.findById(postId).orElseThrow();
 
         comment = Comment.builder()
                 .name("Friendly comment")
                 .content("Praise, kudos")
-                .postId(postEntity.getId()).build();
+                .postId(postId).build();
     }
 
     @Test
-    void count() throws SQLException {
+    void count() {
         assertEquals(0, commentService.count());
     }
 
