@@ -43,22 +43,20 @@ public class CommentRepository implements DAO<CommentEntity> {
         Assert.notNull(commentEntity.getPostId(), "missing Post");
         var sql = "insert into comment (post_id, name, content, published_on) values(?,?,?,?)";
 
-        Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        statement.setLong(1, commentEntity.getPostId());
-        statement.setString(2, commentEntity.getName());
-        statement.setString(3, commentEntity.getContent());
-        statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+        try (Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setLong(1, commentEntity.getPostId());
+            statement.setString(2, commentEntity.getName());
+            statement.setString(3, commentEntity.getContent());
+            statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
 
-        final int numRows = statement.executeUpdate();
-        if (numRows != 1) {
-            throw new SQLException("Unable to save " + commentEntity);
+            final int numRows = statement.executeUpdate();
+            if (numRows != 1) {
+                throw new SQLException("Unable to save " + commentEntity);
+            }
+
+            return getKey(statement);
         }
-
-        final Long rowKey = getKey(statement);
-        connection.close();
-
-        return rowKey;
     }
 
     public int update(CommentEntity commentEntity) {
