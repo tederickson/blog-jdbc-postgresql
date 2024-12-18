@@ -70,6 +70,12 @@ class PostServiceTest {
 
         assertNull(persisted.getUpdatedOn());
         assertNull(post.getUpdatedOn());
+
+        assertEquals(1, postService.count());
+
+        var posts = postService.findAll();
+        assertEquals(1, posts.size());
+        assertEquals(persisted, posts.getFirst());
     }
 
     @Test

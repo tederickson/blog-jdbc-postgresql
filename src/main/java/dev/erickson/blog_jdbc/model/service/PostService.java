@@ -28,11 +28,13 @@ public class PostService {
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
 
-        for (var postEntity : postRepository.findAll().stream().toList()) {
+        for (var postEntity : postRepository.findAll()) {
             Post post = PostMapper.toRest(postEntity);
 
             post.setAuthor(authorService.findById(postEntity.getAuthorId()).orElseThrow());
             post.setComments(commentService.findByPost(postEntity));
+
+            posts.add(post);
         }
 
         return posts;
