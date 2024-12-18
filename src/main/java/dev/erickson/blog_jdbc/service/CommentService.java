@@ -1,4 +1,4 @@
-package dev.erickson.blog_jdbc.model.service;
+package dev.erickson.blog_jdbc.service;
 
 import dev.erickson.blog_jdbc.domain.Comment;
 import dev.erickson.blog_jdbc.model.CommentEntity;

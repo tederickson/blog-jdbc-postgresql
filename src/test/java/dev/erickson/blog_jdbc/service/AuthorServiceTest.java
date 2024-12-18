@@ -1,8 +1,9 @@
-package dev.erickson.blog_jdbc.model.service;
+package dev.erickson.blog_jdbc.service;
 
 import dev.erickson.blog_jdbc.domain.Author;
 import dev.erickson.blog_jdbc.model.AuthorEntity;
 import dev.erickson.blog_jdbc.repository.AuthorRepository;
+import dev.erickson.blog_jdbc.service.AuthorService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

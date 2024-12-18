@@ -1,8 +1,11 @@
-package dev.erickson.blog_jdbc.model.service;
+package dev.erickson.blog_jdbc.service;
 
 import dev.erickson.blog_jdbc.domain.Author;
 import dev.erickson.blog_jdbc.domain.Comment;
 import dev.erickson.blog_jdbc.domain.Post;
+import dev.erickson.blog_jdbc.service.AuthorService;
+import dev.erickson.blog_jdbc.service.CommentService;
+import dev.erickson.blog_jdbc.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
