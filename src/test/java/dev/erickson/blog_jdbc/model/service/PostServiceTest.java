@@ -83,7 +83,15 @@ class PostServiceTest {
     }
 
     @Test
-    void findById() {
+    void findById() throws SQLException {
+        Post persisted = postService.create(post);
+
+        assertEquals(persisted, postService.findById(persisted.getId()).orElseThrow());
+    }
+
+    @Test
+    void findById_notFound() {
+        assertTrue(postService.findById(-1L).isEmpty());
     }
 
     @Test
