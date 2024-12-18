@@ -135,6 +135,14 @@ class CommentServiceTest {
                 .name("Rude comment")
                 .content("Troll troll troll").build();
 
-        assertEquals(updated, commentService.update(updated));
+        Comment persistedComment = commentService.update(updated);
+        assertNotNull(persistedComment);
+        assertEquals(persisted.id(), persistedComment.id());
+        assertEquals(persisted.postId(), persistedComment.postId());
+        assertEquals("Troll troll troll", persistedComment.content());
+        assertEquals("Rude comment", persistedComment.name());
+        assertEquals(persisted.publishedOn(), persistedComment.publishedOn());
+        assertNull(persisted.updatedOn());
+        assertNotNull(persistedComment.updatedOn());
     }
 }
