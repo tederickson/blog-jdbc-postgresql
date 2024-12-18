@@ -95,6 +95,16 @@ class PostServiceTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteById() throws SQLException {
+        Post persisted = postService.create(post);
+        assertEquals(1, postService.count());
+
+        postService.deleteById(persisted.getId());
+        assertEquals(0, postService.count());
+    }
+
+    @Test
+    void deleteById_notFound() {
+        postService.deleteById(-123L);
     }
 }
