@@ -24,17 +24,15 @@ class PostServiceTest {
     private static final String TITLE = "My Test Post for PostServiceTest";
     @Autowired
     private AuthorService authorService;
-    @Autowired
-    private CommentService commentService;
+
     @Autowired
     private PostService postService;
 
-    private Author author;
     private Post post;
 
     @BeforeEach
     void setUp() {
-        author = authorService.findById(3L).orElseThrow();
+        Author author = authorService.findById(3L).orElseThrow();
 
         post = Post.builder()
                 .author(author)
@@ -120,7 +118,30 @@ class PostServiceTest {
     }
 
     @Test
-    void update_noComments() {
+    void update_noComments() throws SQLException {
+        Post persisted = postService.create(post);
+
+        persisted.setAuthor(authorService.findById(1L).orElseThrow());
+        persisted.setContent("This is a different author");
+        persisted.setTitle("update_noComments");
+
+        Post updated = postService.update(persisted);
+
+        assertEquals(persisted.getId(), updated.getId());
+
+        assertEquals(persisted.getAuthor(), updated.getAuthor());
+        assertEquals(persisted.getTitle(), updated.getTitle());
+        assertEquals(persisted.getContent(), updated.getContent());
+
+        assertTrue(CollectionUtils.isEmpty(persisted.getComments()));
+        assertTrue(CollectionUtils.isEmpty(updated.getComments()));
+
+        assertEquals(persisted.getPublishedOn(),updated.getPublishedOn());
+
+        assertNull(persisted.getUpdatedOn());
+        assertNotNull(updated.getUpdatedOn());
+
+        assertEquals(1, postService.count());
     }
 
     @Test
