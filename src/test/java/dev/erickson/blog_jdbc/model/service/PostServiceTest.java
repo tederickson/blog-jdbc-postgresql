@@ -11,12 +11,14 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @Sql("/data/InitializeTests.sql")
@@ -183,6 +185,78 @@ class PostServiceTest {
 
         assertEquals(1, postService.count());
         assertEquals(1, commentService.count());
+    }
+
+    @Test
+    void update_withComments() throws SQLException {
+        assertEquals(0, commentService.count());
+
+        Comment comment1 = Comment.builder()
+                .name("This is my name")
+                .content("Nice succinct comment")
+                .build();
+        Comment comment2 = Comment.builder()
+                .name("This is comment 2")
+                .content("comment comment comment")
+                .build();
+        Comment comment3 = Comment.builder()
+                .name("This is comment 3")
+                .content("comment three comment")
+                .build();
+        post.setComments(List.of(comment1, comment2));
+
+        Post persisted = postService.create(post);
+        List<Comment> comments = new ArrayList<>(persisted.getComments());
+
+        var secondComment = comments.remove(1);
+        var updatedComment = secondComment.toBuilder()
+                .content("My updated content")
+                .name("My updated name")
+                .build();
+
+        comments.add(comment3);
+        comments.add(updatedComment);
+        persisted.setComments(comments);
+
+        Post updated = postService.update(persisted);
+
+        assertEquals(1, postService.count());
+        assertEquals(3, commentService.count());
+
+        assertEquals(persisted.getId(), updated.getId());
+        assertEquals(persisted.getAuthor(), updated.getAuthor());
+        assertEquals(persisted.getTitle(), updated.getTitle());
+        assertEquals(persisted.getContent(), updated.getContent());
+        assertEquals(persisted.getPublishedOn(), updated.getPublishedOn());
+
+        assertNull(persisted.getUpdatedOn());
+        assertNotNull(updated.getUpdatedOn());
+
+        assertEquals(3, updated.getComments().size());
+
+        for (Comment comment : updated.getComments()) {
+            assertNotNull(comment.id());
+            assertEquals(persisted.getId(), comment.postId());
+            assertNotNull(comment.publishedOn());
+
+            switch (comment.name()) {
+                case "This is my name":
+                    assertNotNull(comment.updatedOn());
+                    assertEquals("Nice succinct comment", comment.content());
+                    break;
+                case "This is comment 3":
+                    assertNull(comment.updatedOn());
+                    assertEquals("comment three comment", comment.content());
+                    break;
+                case "My updated name":
+                    assertNotNull(comment.updatedOn());
+                    assertEquals("My updated content", comment.content());
+                    break;
+
+                default:
+                    fail(comment.toString());
+            }
+        }
     }
 
     @Test

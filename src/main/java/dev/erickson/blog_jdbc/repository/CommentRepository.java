@@ -65,7 +65,7 @@ public class CommentRepository implements DAO<CommentEntity> {
                 "update comment set post_id=?, name=?, content=?, published_on=?, updated_on=? where id = ?",
                 commentEntity.getPostId(), commentEntity.getName(), commentEntity.getContent(),
                 commentEntity.getPublishedOn(),
-                commentEntity.getUpdatedOn(),
+                Timestamp.valueOf(LocalDateTime.now()),
                 commentEntity.getId());
     }
 
