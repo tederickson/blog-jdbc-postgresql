@@ -27,6 +27,8 @@ class PostServiceTest {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    private CommentService commentService;
 
     private Post post;
 
@@ -103,6 +105,7 @@ class PostServiceTest {
         assertEquals(comment.content(), persist1.content());
         assertEquals(comment.name(), persist1.name());
         assertNotNull(persist1.publishedOn());
+        assertNull(persist1.updatedOn());
 
         assertNotNull(persisted.getPublishedOn());
         assertNull(post.getPublishedOn());
@@ -136,12 +139,50 @@ class PostServiceTest {
         assertTrue(CollectionUtils.isEmpty(persisted.getComments()));
         assertTrue(CollectionUtils.isEmpty(updated.getComments()));
 
-        assertEquals(persisted.getPublishedOn(),updated.getPublishedOn());
+        assertEquals(persisted.getPublishedOn(), updated.getPublishedOn());
 
         assertNull(persisted.getUpdatedOn());
         assertNotNull(updated.getUpdatedOn());
 
         assertEquals(1, postService.count());
+        assertEquals(0, commentService.count());
+    }
+
+    @Test
+    void update_newComment() throws SQLException {
+        assertEquals(0, commentService.count());
+
+        Post persisted = postService.create(post);
+        Comment comment = Comment.builder()
+                .name("This is my name")
+                .content("Nice succinct comment")
+                .build();
+
+        persisted.setComments(List.of(comment));
+
+        Post updated = postService.update(persisted);
+
+        assertEquals(persisted.getId(), updated.getId());
+        assertEquals(persisted.getAuthor(), updated.getAuthor());
+        assertEquals(persisted.getTitle(), updated.getTitle());
+        assertEquals(persisted.getContent(), updated.getContent());
+        assertEquals(persisted.getPublishedOn(), updated.getPublishedOn());
+
+        assertNull(persisted.getUpdatedOn());
+        assertNotNull(updated.getUpdatedOn());
+
+        assertEquals(1, updated.getComments().size());
+        var persist1 = updated.getComments().getFirst();
+
+        assertNotNull(persist1.id());
+        assertEquals(persisted.getId(), persist1.postId());
+        assertEquals(comment.content(), persist1.content());
+        assertEquals(comment.name(), persist1.name());
+        assertNotNull(persist1.publishedOn());
+        assertNull(persist1.updatedOn());
+
+        assertEquals(1, postService.count());
+        assertEquals(1, commentService.count());
     }
 
     @Test
