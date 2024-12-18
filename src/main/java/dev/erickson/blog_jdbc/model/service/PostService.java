@@ -1,5 +1,6 @@
 package dev.erickson.blog_jdbc.model.service;
 
+import dev.erickson.blog_jdbc.domain.Comment;
 import dev.erickson.blog_jdbc.domain.Post;
 import dev.erickson.blog_jdbc.model.PostEntity;
 import dev.erickson.blog_jdbc.repository.PostRepository;
@@ -10,6 +11,7 @@ import org.springframework.util.Assert;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -47,6 +49,33 @@ public class PostService {
         }
 
         return findById(postId).orElseThrow();
+    }
+
+    public Post update(final Post post) throws SQLException {
+        Assert.notNull(post.getId(), "The id must not be null");
+
+        PostEntity postEntity = PostMapper.toEntity(post);
+        postRepository.update(postEntity);
+
+        for (Comment databaseComment : commentService.findByPost(postEntity)) {
+            Optional<Comment> existingComment = post.getComments().stream()
+                    .filter(comment -> Objects.equals(comment.id(), databaseComment.id()))
+                    .findFirst();
+            if (existingComment.isEmpty()) {
+                commentService.deleteById(databaseComment.id());
+            }
+            else {
+                commentService.update(existingComment.get());
+            }
+        }
+
+        List<Comment> newComments = post.getComments().stream()
+                .filter(comment -> comment.id() == null).toList();
+        for (Comment comment : newComments) {
+            commentService.create(comment, post.getId());
+        }
+
+        return findById(post.getId()).orElseThrow();
     }
 
     public Optional<Post> findById(Long id) {
